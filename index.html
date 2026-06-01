@@ -323,7 +323,7 @@
   <div class="section active" id="sezione-singolo">
     <div class="container">
       <h1>Spedizione Singola</h1>
-      <p class="subtitle">Inserisci le dimensioni della spedizione per calcolare il PV</p>
+      <p class="subtitle">Inserisci le dimensioni del collo per calcolare il PV</p>
 
       <div class="field">
         <label>P/V</label>
@@ -369,7 +369,7 @@
   <div class="section" id="sezione-multiplo">
     <div class="container">
       <h1>Spedizioni Multiple</h1>
-      <p class="subtitle">Aggiungi le spedizioni e calcola il PV totale</p>
+      <p class="subtitle">Aggiungi i colli e calcola il PV totale</p>
 
       <div class="field">
         <label>P/V (per tutta la spedizione)</label>
@@ -396,7 +396,7 @@
         </div>
       </div>
 
-      <button class="add-btn" onclick="aggiungiBancale()">+ Aggiungi spedizione</button>
+      <button class="add-btn" onclick="aggiungiBancale()">+ Aggiungi collo</button>
 
       <div class="error" id="errore-multi">Inserisci tutti e tre i valori con numeri maggiori di zero.</div>
 
@@ -419,7 +419,7 @@
   <!-- STORIA -->
   <div class="history-container">
     <div class="history-header">
-      <h2>Storia dei calcoli</h2>
+      <h2>Storico</h2>
       <button class="clear-btn" onclick="cancellaStoria()">Cancella tutto</button>
     </div>
     <div id="history-content">
@@ -466,7 +466,7 @@
               <div class="history-item multi">
                 <div class="hi-badge">Spedizioni Multiple</div>
                 <div class="hi-result">PV Totale: ${item.pv}</div>
-                <div class="hi-details">${item.nbancali} spedizioni &nbsp;|&nbsp; Fattore P/V: ${item.fattore}</div>
+                <div class="hi-details">${item.nbancali} colli &nbsp;|&nbsp; Fattore P/V: ${item.fattore}</div>
                 ${righe ? `<details class="hi-details-drop"><summary>Vedi dimensioni</summary><div class="hi-drop-body">${righe}</div></details>` : ''}
                 <div class="hi-time">${item.data}</div>
               </div>`;
@@ -536,7 +536,7 @@
     function renderBancali() {
       const list = document.getElementById('bancali-list');
       if (bancaliMultipli.length === 0) {
-        list.innerHTML = '<div class="bancali-empty">Nessuna spedizione aggiunta.</div>';
+        list.innerHTML = '<div class="bancali-empty">Nessun collo aggiunto.</div>';
         return;
       }
       list.innerHTML = bancaliMultipli.map((b, i) => `
