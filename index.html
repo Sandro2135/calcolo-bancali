@@ -566,7 +566,7 @@
       risultato.classList.add('visible');
 
       ['lunghezza', 'profondita', 'altezza'].forEach(id => document.getElementById(id).value = '');
-      document.getElementById('lunghezza').focus();
+      document.activeElement.blur();
 
       const storia = getStoria();
       storia.push({ tipo: 'singolo', l, p, a, fattore, pv: pvRisultato, data: ora() });
