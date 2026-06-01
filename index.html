@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calcolo Volume Bancali</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      padding: 40px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      color: #1a202c;
+      margin-bottom: 8px;
+    }
+
+    p.subtitle {
+      color: #718096;
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #1a202c;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    input[type="number"]:focus {
+      border-color: #4299e1;
+    }
+
+    .unit {
+      font-size: 0.75rem;
+      color: #a0aec0;
+      margin-top: 4px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #4299e1;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #3182ce;
+    }
+
+    .result {
+      margin-top: 28px;
+      padding: 24px;
+      background: #ebf8ff;
+      border-radius: 12px;
+      text-align: center;
+      display: none;
+    }
+
+    .result.visible {
+      display: block;
+    }
+
+    .result-label {
+      font-size: 0.85rem;
+      color: #2b6cb0;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #2b6cb0;
+    }
+
+    .result-unit {
+      font-size: 1rem;
+      color: #4299e1;
+      margin-top: 4px;
+    }
+
+    .error {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: #fff5f5;
+      border-left: 4px solid #fc8181;
+      border-radius: 6px;
+      color: #c53030;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .error.visible {
+      display: block;
+    }
+
+    .reset-btn {
+      margin-top: 12px;
+      background: transparent;
+      color: #4299e1;
+      border: 2px solid #4299e1;
+    }
+
+    .reset-btn:hover {
+      background: #ebf8ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Calcolo Volume Bancali</h1>
+    <p class="subtitle">Inserisci le dimensioni del bancale per calcolare il volume</p>
+
+    <div class="field">
+      <label>Lunghezza</label>
+      <input type="number" id="lunghezza" placeholder="es. 1.20" min="0" step="0.01" />
+      <div class="unit">in centimetri (cm)</div>
+    </div>
+
+    <div class="field">
+      <label>Profondità</label>
+      <input type="number" id="profondita" placeholder="es. 0.80" min="0" step="0.01" />
+      <div class="unit">in centimetri (cm)</div>
+    </div>
+
+    <div class="field">
+      <label>Altezza</label>
+      <input type="number" id="altezza" placeholder="es. 1.50" min="0" step="0.01" />
+      <div class="unit">in centimetri (cm)</div>
+    </div>
+
+    <button onclick="calcola()">Calcola Volume</button>
+    <button class="reset-btn" onclick="reset()">Azzera</button>
+
+    <div class="error" id="errore">Inserisci tutti e tre i valori con numeri maggiori di zero.</div>
+
+    <div class="result" id="risultato">
+      <div class="result-label">Volume del bancale</div>
+      <div class="result-value" id="volume-value">—</div>
+      <div class="result-unit">metri cubi (m³)</div>
+    </div>
+  </div>
+
+  <script>
+    function calcola() {
+      const l = parseFloat(document.getElementById('lunghezza').value);
+      const p = parseFloat(document.getElementById('profondita').value);
+      const a = parseFloat(document.getElementById('altezza').value);
+
+      const errore = document.getElementById('errore');
+      const risultato = document.getElementById('risultato');
+
+      if (!l || !p || !a || l <= 0 || p <= 0 || a <= 0) {
+        errore.classList.add('visible');
+        risultato.classList.remove('visible');
+        return;
+      }
+
+      errore.classList.remove('visible');
+
+      // Conversione da cm a m: dividi per 100 ciascuna dimensione
+      const volumeM3 = (l / 100) * (p / 100) * (a / 100);
+
+      document.getElementById('volume-value').textContent = volumeM3.toFixed(4);
+      risultato.classList.add('visible');
+    }
+
+    function reset() {
+      document.getElementById('lunghezza').value = '';
+      document.getElementById('profondita').value = '';
+      document.getElementById('altezza').value = '';
+      document.getElementById('errore').classList.remove('visible');
+      document.getElementById('risultato').classList.remove('visible');
+    }
+
+    // Calcola premendo Invio su qualsiasi campo
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') calcola();
+      });
+    });
+  </script>
+</body>
+</html>
