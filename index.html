@@ -316,7 +316,7 @@
   <!-- MENU -->
   <div class="menu">
     <button class="menu-btn active" onclick="cambiaSezione('singolo')">Spedizione Singola</button>
-    <button class="menu-btn" onclick="cambiaSezione('multiplo')">Spedizioni Multiple</button>
+    <button class="menu-btn" onclick="cambiaSezione('multiplo')">Spedizione Multipla</button>
   </div>
 
   <!-- SEZIONE SINGOLO -->
@@ -368,11 +368,11 @@
   <!-- SEZIONE MULTIPLO -->
   <div class="section" id="sezione-multiplo">
     <div class="container">
-      <h1>Spedizioni Multiple</h1>
+      <h1>Spedizione Multipla</h1>
       <p class="subtitle">Aggiungi i colli e calcola il PV totale</p>
 
       <div class="field">
-        <label>P/V (per tutta la spedizione)</label>
+        <label>P/V</label>
         <select id="pv-multi">
           <option value="300">300</option>
           <option value="250">250</option>
@@ -464,7 +464,7 @@
             ).join('');
             return `
               <div class="history-item multi">
-                <div class="hi-badge">Spedizioni Multiple</div>
+                <div class="hi-badge">Spedizione Multipla</div>
                 <div class="hi-result">PV Totale: ${item.pv}</div>
                 <div class="hi-details">${item.nbancali} colli &nbsp;|&nbsp; Fattore P/V: ${item.fattore}</div>
                 ${righe ? `<details class="hi-details-drop"><summary>Vedi dimensioni</summary><div class="hi-drop-body">${righe}</div></details>` : ''}
