@@ -282,6 +282,33 @@
 
     .history-item .hi-details { font-size: 0.78rem; color: #718096; margin-top: 4px; }
     .history-item .hi-time { font-size: 0.72rem; color: #a0aec0; margin-top: 2px; }
+
+    .hi-details-drop { margin-top: 8px; }
+
+    .hi-details-drop summary {
+      font-size: 0.78rem;
+      color: #276749;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .hi-details-drop summary:hover { text-decoration: underline; }
+
+    .hi-drop-body {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hi-spedizione {
+      font-size: 0.76rem;
+      color: #4a5568;
+      background: #f0fff4;
+      border-radius: 5px;
+      padding: 4px 8px;
+    }
   </style>
 </head>
 <body>
@@ -432,11 +459,15 @@
       contenuto.innerHTML = '<div class="history-list">' +
         storia.slice().reverse().map(item => {
           if (item.tipo === 'multiplo') {
+            const righe = (item.spedizioni || []).map((s, i) =>
+              `<div class="hi-spedizione">#${i+1} &nbsp; X: ${s.x} cm &nbsp;|&nbsp; Y: ${s.y} cm &nbsp;|&nbsp; Z: ${s.z} cm</div>`
+            ).join('');
             return `
               <div class="history-item multi">
                 <div class="hi-badge">Spedizioni Multiple</div>
                 <div class="hi-result">PV Totale: ${item.pv}</div>
                 <div class="hi-details">${item.nbancali} spedizioni &nbsp;|&nbsp; Fattore P/V: ${item.fattore}</div>
+                ${righe ? `<details class="hi-details-drop"><summary>Vedi dimensioni</summary><div class="hi-drop-body">${righe}</div></details>` : ''}
                 <div class="hi-time">${item.data}</div>
               </div>`;
           } else {
@@ -565,7 +596,7 @@
       risultato.classList.add('visible');
 
       const storia = getStoria();
-      storia.push({ tipo: 'multiplo', nbancali: bancaliMultipli.length, fattore, pv: pvRisultato, data: ora() });
+      storia.push({ tipo: 'multiplo', nbancali: bancaliMultipli.length, spedizioni: [...bancaliMultipli], fattore, pv: pvRisultato, data: ora() });
       salvaStoria(storia);
       renderStoria();
     }
