@@ -40,8 +40,8 @@
       margin-top: 0;
     }
 
-    .menu-btn.active { background: #48bb78; border-color: #48bb78; color: white; }
-    .menu-btn:hover:not(.active) { border-color: #48bb78; color: #48bb78; }
+    .menu-btn.active { background: #276749; border-color: #276749; color: white; }
+    .menu-btn:hover:not(.active) { border-color: #276749; color: #276749; }
 
     /* SEZIONI */
     .section { display: none; width: 100%; max-width: 480px; }
@@ -381,7 +381,7 @@
         </div>
       </div>
 
-      <button onclick="calcola()">Calcola</button>
+      <button onclick="calcola()">Calcola PV</button>
       <button class="reset-btn" onclick="resetCampi()">Azzera</button>
       <button class="storico-open-btn" onclick="apriStorico()">Storico</button>
 
@@ -398,7 +398,7 @@
   <div class="section" id="sezione-multiplo">
     <div class="container">
       <h1>Spedizione Multipla</h1>
-      <p class="subtitle">Aggiungi i colli e calcola il PV totale</p>
+      <p class="subtitle">Inserisci le dimensioni dei colli per calcolare il PV</p>
 
       <div class="field">
         <label>P/V</label>
@@ -436,8 +436,8 @@
         <div class="bancali-empty">Nessun collo aggiunto.</div>
       </div>
 
-      <button onclick="calcolaMulti()" style="margin-top:14px;">Calcola PV totale</button>
-      <button class="reset-btn" onclick="resetMulti()">Azzera tutto</button>
+      <button onclick="calcolaMulti()" style="margin-top:14px;">Calcola PV</button>
+      <button class="reset-btn" onclick="resetMulti()">Azzera</button>
       <button class="storico-open-btn" onclick="apriStorico()">Storico</button>
 
       <div class="error" id="errore-multi2">Aggiungi almeno una spedizione prima di calcolare.</div>
