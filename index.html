@@ -9,34 +9,131 @@
 
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #f0f4f8;
       min-height: 100vh;
+      background: #3b2a1a;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 16px 60px;
     }
+
+    /* CARTELLINA */
+    .cartellina {
+      position: relative;
+      background: #6b3f1f;
+      border-radius: 6px 6px 4px 4px;
+      padding: 52px 20px 24px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    /* Texture legno */
+    .cartellina::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: repeating-linear-gradient(
+        92deg,
+        transparent,
+        transparent 18px,
+        rgba(0,0,0,0.04) 18px,
+        rgba(0,0,0,0.04) 19px
+      );
+      pointer-events: none;
+    }
+
+    /* CLIP METALLICA */
+    .clip {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 72px;
+      height: 28px;
+      background: linear-gradient(180deg, #c0c0c0, #888, #c0c0c0);
+      border-radius: 4px 4px 0 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      z-index: 10;
+    }
+
+    .clip::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 14px;
+      background: linear-gradient(180deg, #e8e8e8, #aaa);
+      border-radius: 3px;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    /* FOGLIO A4 */
+    .foglio {
+      background: #fafafa;
+      border-radius: 2px;
+      padding: 28px 28px 32px;
+      box-shadow:
+        0 2px 8px rgba(0,0,0,0.25),
+        0 0 0 1px rgba(0,0,0,0.06);
+      position: relative;
+    }
+
+    /* TOP BAR: tasto storico */
+    .top-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .storico-btn {
+      width: auto;
+      padding: 7px 16px;
+      background: #f7fafc;
+      color: #4a5568;
+      border: 1.5px solid #cbd5e0;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 0;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .storico-btn:hover {
+      background: #edf2f7;
+      border-color: #a0aec0;
+    }
+
+    .storico-btn::before { content: '📋'; font-size: 0.9rem; }
 
     /* MENU */
     .menu {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 24px;
-      width: 100%;
-      max-width: 480px;
     }
 
     .menu-btn {
       flex: 1;
-      padding: 14px;
-      border-radius: 10px;
+      padding: 11px;
+      border-radius: 8px;
       border: 2px solid #e2e8f0;
       background: white;
       color: #718096;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
+      margin-top: 0;
     }
 
     .menu-btn.active {
@@ -51,37 +148,28 @@
     }
 
     /* SEZIONI */
-    .section { display: none; width: 100%; max-width: 480px; }
+    .section { display: none; }
     .section.active { display: block; }
 
-    .container {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
-      padding: 40px;
-      margin-bottom: 24px;
-    }
+    h1 { font-size: 1.3rem; color: #1a202c; margin-bottom: 6px; }
 
-    h1 { font-size: 1.5rem; color: #1a202c; margin-bottom: 8px; }
-    h2 { font-size: 1.1rem; color: #1a202c; }
+    p.subtitle { color: #718096; font-size: 0.88rem; margin-bottom: 24px; }
 
-    p.subtitle { color: #718096; font-size: 0.9rem; margin-bottom: 32px; }
-
-    .field { margin-bottom: 20px; }
+    .field { margin-bottom: 18px; }
 
     label {
       display: block;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
       color: #4a5568;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
     input[type="number"], select {
       width: 100%;
-      padding: 12px 16px;
+      padding: 10px 14px;
       border: 2px solid #e2e8f0;
       border-radius: 8px;
       font-size: 1rem;
@@ -91,22 +179,22 @@
       background: white;
     }
 
-    input[type="number"]:focus, select:focus { border-color: #4299e1; }
-
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 
-    .unit { font-size: 0.75rem; color: #a0aec0; margin-top: 4px; }
+    input[type="number"]:focus, select:focus { border-color: #4299e1; }
+
+    .unit { font-size: 0.73rem; color: #a0aec0; margin-top: 4px; }
 
     button {
       width: 100%;
-      padding: 14px;
+      padding: 12px;
       background: #4299e1;
       color: white;
       border: none;
       border-radius: 8px;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       margin-top: 8px;
@@ -119,16 +207,16 @@
       background: transparent;
       color: #4299e1;
       border: 2px solid #4299e1;
-      margin-top: 12px;
+      margin-top: 10px;
     }
 
     .reset-btn:hover { background: #ebf8ff; }
 
     .result {
-      margin-top: 28px;
-      padding: 24px;
+      margin-top: 24px;
+      padding: 20px;
       background: #ebf8ff;
-      border-radius: 12px;
+      border-radius: 10px;
       text-align: center;
       display: none;
     }
@@ -136,107 +224,129 @@
     .result.visible { display: block; }
 
     .result-label {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: #2b6cb0;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
-    .result-value { font-size: 2.5rem; font-weight: 700; color: #2b6cb0; }
+    .result-value { font-size: 2.2rem; font-weight: 700; color: #2b6cb0; }
 
     .error {
-      margin-top: 16px;
-      padding: 12px 16px;
+      margin-top: 14px;
+      padding: 10px 14px;
       background: #fff5f5;
       border-left: 4px solid #fc8181;
       border-radius: 6px;
       color: #c53030;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       display: none;
     }
 
     .error.visible { display: block; }
 
-    /* BANCALI MULTIPLI */
+    /* SPEDIZIONE MULTIPLA */
     .add-row {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .add-row .field { margin-bottom: 0; }
 
-    .add-btn {
-      margin-top: 0;
-      background: #48bb78;
-    }
-
+    .add-btn { background: #48bb78; margin-top: 0; }
     .add-btn:hover { background: #38a169; }
 
-    .bancali-list {
-      margin-top: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    .bancali-list { margin-top: 16px; display: flex; flex-direction: column; gap: 7px; }
 
     .bancale-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
       background: #f7fafc;
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 0.85rem;
+      border-radius: 7px;
+      padding: 9px 12px;
+      font-size: 0.83rem;
       color: #4a5568;
       border-left: 4px solid #48bb78;
     }
 
-    .bancale-item .bi-num {
-      font-weight: 700;
-      color: #2f855a;
-      margin-right: 8px;
-    }
+    .bancale-item .bi-num { font-weight: 700; color: #2f855a; margin-right: 6px; }
 
     .bancale-item .remove-btn {
       width: auto;
-      padding: 4px 10px;
-      font-size: 0.75rem;
+      padding: 3px 9px;
+      font-size: 0.73rem;
       background: #fff5f5;
       color: #c53030;
       border: 1px solid #fc8181;
-      border-radius: 6px;
+      border-radius: 5px;
       margin-top: 0;
     }
 
     .bancale-item .remove-btn:hover { background: #fed7d7; }
 
-    .bancali-empty {
-      color: #a0aec0;
-      font-size: 0.85rem;
-      text-align: center;
-      padding: 16px 0;
+    .bancali-empty { color: #a0aec0; font-size: 0.85rem; text-align: center; padding: 14px 0; }
+
+    /* PANNELLO STORICO */
+    .storico-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 100;
     }
 
-    /* STORIA */
-    .history-container {
+    .storico-overlay.visible { display: block; }
+
+    .storico-panel {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: min(400px, 92vw);
+      height: 100vh;
       background: white;
-      border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
-      padding: 32px;
-      width: 100%;
-      max-width: 480px;
-      margin-bottom: 24px;
+      box-shadow: -4px 0 24px rgba(0,0,0,0.2);
+      z-index: 101;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.3s ease;
     }
 
-    .history-header {
+    .storico-panel.visible { right: 0; }
+
+    .storico-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
+      padding: 20px 24px;
+      border-bottom: 1px solid #e2e8f0;
+      flex-shrink: 0;
+    }
+
+    .storico-header h2 { font-size: 1.1rem; color: #1a202c; }
+
+    .storico-close {
+      width: auto;
+      padding: 6px 12px;
+      background: #f7fafc;
+      color: #4a5568;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-top: 0;
+      cursor: pointer;
+    }
+
+    .storico-close:hover { background: #edf2f7; }
+
+    .storico-actions {
+      padding: 12px 24px;
+      border-bottom: 1px solid #e2e8f0;
+      flex-shrink: 0;
     }
 
     .clear-btn {
@@ -252,7 +362,13 @@
 
     .clear-btn:hover { background: #fed7d7; }
 
-    .history-empty { color: #a0aec0; font-size: 0.9rem; text-align: center; padding: 20px 0; }
+    .storico-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 24px 24px;
+    }
+
+    .history-empty { color: #a0aec0; font-size: 0.9rem; text-align: center; padding: 40px 0; }
 
     .history-list { display: flex; flex-direction: column; gap: 12px; }
 
@@ -299,12 +415,7 @@
 
     .hi-details-drop summary:hover { text-decoration: underline; }
 
-    .hi-drop-body {
-      margin-top: 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+    .hi-drop-body { margin-top: 6px; display: flex; flex-direction: column; gap: 4px; }
 
     .hi-spedizione {
       font-size: 0.76rem;
@@ -317,116 +428,131 @@
 </head>
 <body>
 
-  <!-- MENU -->
-  <div class="menu">
-    <button class="menu-btn active" onclick="cambiaSezione('singolo')">Spedizione Singola</button>
-    <button class="menu-btn" onclick="cambiaSezione('multiplo')">Spedizione Multipla</button>
-  </div>
+  <div class="cartellina">
+    <div class="clip"></div>
 
-  <!-- SEZIONE SINGOLO -->
-  <div class="section active" id="sezione-singolo">
-    <div class="container">
-      <h1>Spedizione Singola</h1>
-      <p class="subtitle">Inserisci le dimensioni del collo per calcolare il PV</p>
+    <div class="foglio">
 
-      <div class="field">
-        <label>P/V</label>
-        <select id="pv">
-          <option value="300">300</option>
-          <option value="250">250</option>
-          <option value="200">200</option>
-          <option value="167">167</option>
-        </select>
+      <!-- TOP BAR -->
+      <div class="top-bar">
+        <button class="storico-btn" onclick="apriStorico()">Storico</button>
       </div>
 
-      <div class="field">
-        <label>X</label>
-        <input type="number" id="lunghezza" min="0" step="0.01" />
-        <div class="unit">in centimetri (cm)</div>
+      <!-- MENU -->
+      <div class="menu">
+        <button class="menu-btn active" onclick="cambiaSezione('singolo', this)">Spedizione Singola</button>
+        <button class="menu-btn" onclick="cambiaSezione('multiplo', this)">Spedizione Multipla</button>
       </div>
 
-      <div class="field">
-        <label>Y</label>
-        <input type="number" id="profondita" min="0" step="0.01" />
-        <div class="unit">in centimetri (cm)</div>
-      </div>
+      <!-- SEZIONE SINGOLO -->
+      <div class="section active" id="sezione-singolo">
+        <h1>Spedizione Singola</h1>
+        <p class="subtitle">Inserisci le dimensioni del collo per calcolare il PV</p>
 
-      <div class="field">
-        <label>Z</label>
-        <input type="number" id="altezza" min="0" step="0.01" />
-        <div class="unit">in centimetri (cm)</div>
-      </div>
+        <div class="field">
+          <label>P/V</label>
+          <select id="pv">
+            <option value="300">300</option>
+            <option value="250">250</option>
+            <option value="200">200</option>
+            <option value="167">167</option>
+          </select>
+        </div>
 
-      <button onclick="calcola()">Calcola</button>
-      <button class="reset-btn" onclick="resetCampi()">Azzera</button>
-
-      <div class="error" id="errore">Inserisci tutti e tre i valori con numeri maggiori di zero.</div>
-
-      <div class="result" id="risultato">
-        <div class="result-label">PV</div>
-        <div class="result-value" id="pv-value">—</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SEZIONE MULTIPLO -->
-  <div class="section" id="sezione-multiplo">
-    <div class="container">
-      <h1>Spedizione Multipla</h1>
-      <p class="subtitle">Aggiungi i colli e calcola il PV totale</p>
-
-      <div class="field">
-        <label>P/V</label>
-        <select id="pv-multi">
-          <option value="300">300</option>
-          <option value="250">250</option>
-          <option value="200">200</option>
-          <option value="167">167</option>
-        </select>
-      </div>
-
-      <div class="add-row">
         <div class="field">
           <label>X</label>
-          <input type="number" id="mx" placeholder="cm" min="0" step="0.01" />
+          <input type="number" id="lunghezza" min="0" step="0.01" />
+          <div class="unit">in centimetri (cm)</div>
         </div>
+
         <div class="field">
           <label>Y</label>
-          <input type="number" id="my" placeholder="cm" min="0" step="0.01" />
+          <input type="number" id="profondita" min="0" step="0.01" />
+          <div class="unit">in centimetri (cm)</div>
         </div>
+
         <div class="field">
           <label>Z</label>
-          <input type="number" id="mz" placeholder="cm" min="0" step="0.01" />
+          <input type="number" id="altezza" min="0" step="0.01" />
+          <div class="unit">in centimetri (cm)</div>
+        </div>
+
+        <button onclick="calcola()">Calcola</button>
+        <button class="reset-btn" onclick="resetCampi()">Azzera</button>
+
+        <div class="error" id="errore">Inserisci tutti e tre i valori con numeri maggiori di zero.</div>
+
+        <div class="result" id="risultato">
+          <div class="result-label">PV</div>
+          <div class="result-value" id="pv-value">—</div>
         </div>
       </div>
 
-      <button class="add-btn" onclick="aggiungiBancale()">+ Aggiungi collo</button>
+      <!-- SEZIONE MULTIPLO -->
+      <div class="section" id="sezione-multiplo">
+        <h1>Spedizione Multipla</h1>
+        <p class="subtitle">Aggiungi i colli e calcola il PV totale</p>
 
-      <div class="error" id="errore-multi">Inserisci tutti e tre i valori con numeri maggiori di zero.</div>
+        <div class="field">
+          <label>P/V</label>
+          <select id="pv-multi">
+            <option value="300">300</option>
+            <option value="250">250</option>
+            <option value="200">200</option>
+            <option value="167">167</option>
+          </select>
+        </div>
 
-      <div class="bancali-list" id="bancali-list">
-        <div class="bancali-empty">Nessun bancale aggiunto.</div>
+        <div class="add-row">
+          <div class="field">
+            <label>X</label>
+            <input type="number" id="mx" placeholder="cm" min="0" step="0.01" />
+          </div>
+          <div class="field">
+            <label>Y</label>
+            <input type="number" id="my" placeholder="cm" min="0" step="0.01" />
+          </div>
+          <div class="field">
+            <label>Z</label>
+            <input type="number" id="mz" placeholder="cm" min="0" step="0.01" />
+          </div>
+        </div>
+
+        <button class="add-btn" onclick="aggiungiBancale()">+ Aggiungi collo</button>
+
+        <div class="error" id="errore-multi">Inserisci tutti e tre i valori con numeri maggiori di zero.</div>
+
+        <div class="bancali-list" id="bancali-list">
+          <div class="bancali-empty">Nessun collo aggiunto.</div>
+        </div>
+
+        <button onclick="calcolaMulti()" style="margin-top:20px;">Calcola PV totale</button>
+        <button class="reset-btn" onclick="resetMulti()">Azzera tutto</button>
+
+        <div class="error" id="errore-multi2">Aggiungi almeno una spedizione prima di calcolare.</div>
+
+        <div class="result" id="risultato-multi">
+          <div class="result-label">PV Totale</div>
+          <div class="result-value" id="pv-multi-value">—</div>
+        </div>
       </div>
 
-      <button onclick="calcolaMulti()" style="margin-top:20px;">Calcola PV totale</button>
-      <button class="reset-btn" onclick="resetMulti()">Azzera tutto</button>
+    </div><!-- fine foglio -->
+  </div><!-- fine cartellina -->
 
-      <div class="error" id="errore-multi2">Aggiungi almeno una spedizione prima di calcolare.</div>
+  <!-- OVERLAY -->
+  <div class="storico-overlay" id="storico-overlay" onclick="chiudiStorico()"></div>
 
-      <div class="result" id="risultato-multi">
-        <div class="result-label">PV Totale</div>
-        <div class="result-value" id="pv-multi-value">—</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- STORIA -->
-  <div class="history-container">
-    <div class="history-header">
+  <!-- PANNELLO STORICO -->
+  <div class="storico-panel" id="storico-panel">
+    <div class="storico-header">
       <h2>Storico</h2>
+      <button class="storico-close" onclick="chiudiStorico()">✕</button>
+    </div>
+    <div class="storico-actions">
       <button class="clear-btn" onclick="cancellaStoria()">Cancella tutto</button>
     </div>
-    <div id="history-content">
+    <div class="storico-scroll" id="history-content">
       <div class="history-empty">Nessun calcolo ancora.</div>
     </div>
   </div>
@@ -436,14 +562,24 @@
     let bancaliMultipli = [];
 
     // --- MENU ---
-    function cambiaSezione(nome) {
+    function cambiaSezione(nome, btn) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
       document.getElementById('sezione-' + nome).classList.add('active');
-      event.target.classList.add('active');
+      btn.classList.add('active');
     }
 
-    // --- STORIA ---
+    // --- STORICO ---
+    function apriStorico() {
+      document.getElementById('storico-overlay').classList.add('visible');
+      document.getElementById('storico-panel').classList.add('visible');
+    }
+
+    function chiudiStorico() {
+      document.getElementById('storico-overlay').classList.remove('visible');
+      document.getElementById('storico-panel').classList.remove('visible');
+    }
+
     function getStoria() {
       try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
       catch { return []; }
@@ -488,7 +624,7 @@
     }
 
     function cancellaStoria() {
-      if (confirm('Sei sicuro di voler cancellare tutta la storia?')) {
+      if (confirm('Sei sicuro di voler cancellare tutto lo storico?')) {
         salvaStoria([]);
         renderStoria();
       }
@@ -499,7 +635,7 @@
       return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
     }
 
-    // --- BANCALE SINGOLO ---
+    // --- SPEDIZIONE SINGOLA ---
     function calcola() {
       const l = parseFloat(document.getElementById('lunghezza').value);
       const p = parseFloat(document.getElementById('profondita').value);
@@ -535,11 +671,11 @@
       document.getElementById('risultato').classList.remove('visible');
     }
 
-    document.querySelectorAll('#sezione-singolo input').forEach(input => {
+    document.querySelectorAll('#sezione-singolo input[type="number"]').forEach(input => {
       input.addEventListener('keydown', e => { if (e.key === 'Enter') calcola(); });
     });
 
-    // --- BANCALI MULTIPLI ---
+    // --- SPEDIZIONE MULTIPLA ---
     function renderBancali() {
       const list = document.getElementById('bancali-list');
       if (bancaliMultipli.length === 0) {
@@ -589,7 +725,6 @@
         return;
       }
 
-
       errore2.classList.remove('visible');
       const fattore = parseInt(document.getElementById('pv-multi').value);
 
@@ -617,7 +752,7 @@
       renderBancali();
     }
 
-    document.querySelectorAll('#sezione-multiplo input').forEach(input => {
+    document.querySelectorAll('#sezione-multiplo input[type="number"]').forEach(input => {
       input.addEventListener('keydown', e => { if (e.key === 'Enter') aggiungiBancale(); });
     });
 
