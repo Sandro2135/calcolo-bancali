@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calcolo Volume Bancali</title>
+  <title>Calcolo Volume Spedizioni</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -288,15 +288,15 @@
 
   <!-- MENU -->
   <div class="menu">
-    <button class="menu-btn active" onclick="cambiaSezione('singolo')">Bancale Singolo</button>
-    <button class="menu-btn" onclick="cambiaSezione('multiplo')">Bancali Multipli</button>
+    <button class="menu-btn active" onclick="cambiaSezione('singolo')">Spedizione Singola</button>
+    <button class="menu-btn" onclick="cambiaSezione('multiplo')">Spedizioni Multiple</button>
   </div>
 
   <!-- SEZIONE SINGOLO -->
   <div class="section active" id="sezione-singolo">
     <div class="container">
-      <h1>Bancale Singolo</h1>
-      <p class="subtitle">Inserisci le dimensioni del bancale per calcolare il PV</p>
+      <h1>Spedizione Singola</h1>
+      <p class="subtitle">Inserisci le dimensioni della spedizione per calcolare il PV</p>
 
       <div class="field">
         <label>P/V</label>
@@ -341,8 +341,8 @@
   <!-- SEZIONE MULTIPLO -->
   <div class="section" id="sezione-multiplo">
     <div class="container">
-      <h1>Bancali Multipli</h1>
-      <p class="subtitle">Aggiungi i bancali della spedizione e calcola il PV totale</p>
+      <h1>Spedizioni Multiple</h1>
+      <p class="subtitle">Aggiungi le spedizioni e calcola il PV totale</p>
 
       <div class="field">
         <label>P/V (per tutta la spedizione)</label>
@@ -369,7 +369,7 @@
         </div>
       </div>
 
-      <button class="add-btn" onclick="aggiungiBancale()">+ Aggiungi bancale</button>
+      <button class="add-btn" onclick="aggiungiBancale()">+ Aggiungi spedizione</button>
 
       <div class="error" id="errore-multi">Inserisci tutti e tre i valori con numeri maggiori di zero.</div>
 
@@ -380,7 +380,7 @@
       <button onclick="calcolaMulti()" style="margin-top:20px;">Calcola PV totale</button>
       <button class="reset-btn" onclick="resetMulti()">Azzera tutto</button>
 
-      <div class="error" id="errore-multi2">Aggiungi almeno un bancale prima di calcolare.</div>
+      <div class="error" id="errore-multi2">Aggiungi almeno una spedizione prima di calcolare.</div>
 
       <div class="result" id="risultato-multi">
         <div class="result-label">PV Totale</div>
@@ -434,15 +434,15 @@
           if (item.tipo === 'multiplo') {
             return `
               <div class="history-item multi">
-                <div class="hi-badge">Bancali Multipli</div>
+                <div class="hi-badge">Spedizioni Multiple</div>
                 <div class="hi-result">PV Totale: ${item.pv}</div>
-                <div class="hi-details">${item.nbancali} bancali &nbsp;|&nbsp; Fattore P/V: ${item.fattore}</div>
+                <div class="hi-details">${item.nbancali} spedizioni &nbsp;|&nbsp; Fattore P/V: ${item.fattore}</div>
                 <div class="hi-time">${item.data}</div>
               </div>`;
           } else {
             return `
               <div class="history-item">
-                <div class="hi-badge">Bancale Singolo</div>
+                <div class="hi-badge">Spedizione Singola</div>
                 <div class="hi-result">PV: ${item.pv}</div>
                 <div class="hi-details">X: ${item.l} cm &nbsp;|&nbsp; Y: ${item.p} cm &nbsp;|&nbsp; Z: ${item.a} cm &nbsp;|&nbsp; Fattore P/V: ${item.fattore}</div>
                 <div class="hi-time">${item.data}</div>
@@ -505,7 +505,7 @@
     function renderBancali() {
       const list = document.getElementById('bancali-list');
       if (bancaliMultipli.length === 0) {
-        list.innerHTML = '<div class="bancali-empty">Nessun bancale aggiunto.</div>';
+        list.innerHTML = '<div class="bancali-empty">Nessuna spedizione aggiunta.</div>';
         return;
       }
       list.innerHTML = bancaliMultipli.map((b, i) => `
@@ -550,6 +550,7 @@
         risultato.classList.remove('visible');
         return;
       }
+
 
       errore2.classList.remove('visible');
       const fattore = parseInt(document.getElementById('pv-multi').value);
