@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calcolo Volume Bancali</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -18,35 +14,60 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
       padding: 20px;
     }
+
+    /* MENU */
+    .menu {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .menu-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 10px;
+      border: 2px solid #e2e8f0;
+      background: white;
+      color: #718096;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .menu-btn.active {
+      background: #4299e1;
+      border-color: #4299e1;
+      color: white;
+    }
+
+    .menu-btn:hover:not(.active) {
+      border-color: #4299e1;
+      color: #4299e1;
+    }
+
+    /* SEZIONI */
+    .section { display: none; width: 100%; max-width: 480px; }
+    .section.active { display: block; }
 
     .container {
       background: white;
       border-radius: 16px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.1);
       padding: 40px;
-      width: 100%;
-      max-width: 480px;
       margin-bottom: 24px;
     }
 
-    h1 {
-      font-size: 1.5rem;
-      color: #1a202c;
-      margin-bottom: 8px;
-    }
+    h1 { font-size: 1.5rem; color: #1a202c; margin-bottom: 8px; }
+    h2 { font-size: 1.1rem; color: #1a202c; }
 
-    p.subtitle {
-      color: #718096;
-      font-size: 0.9rem;
-      margin-bottom: 32px;
-    }
+    p.subtitle { color: #718096; font-size: 0.9rem; margin-bottom: 32px; }
 
-    .field {
-      margin-bottom: 20px;
-    }
+    .field { margin-bottom: 20px; }
 
     label {
       display: block;
@@ -70,15 +91,9 @@
       background: white;
     }
 
-    input[type="number"]:focus, select:focus {
-      border-color: #4299e1;
-    }
+    input[type="number"]:focus, select:focus { border-color: #4299e1; }
 
-    .unit {
-      font-size: 0.75rem;
-      color: #a0aec0;
-      margin-top: 4px;
-    }
+    .unit { font-size: 0.75rem; color: #a0aec0; margin-top: 4px; }
 
     button {
       width: 100%;
@@ -94,9 +109,16 @@
       transition: background 0.2s;
     }
 
-    button:hover {
-      background: #3182ce;
+    button:hover { background: #3182ce; }
+
+    .reset-btn {
+      background: transparent;
+      color: #4299e1;
+      border: 2px solid #4299e1;
+      margin-top: 12px;
     }
+
+    .reset-btn:hover { background: #ebf8ff; }
 
     .result {
       margin-top: 28px;
@@ -107,9 +129,7 @@
       display: none;
     }
 
-    .result.visible {
-      display: block;
-    }
+    .result.visible { display: block; }
 
     .result-label {
       font-size: 0.85rem;
@@ -120,11 +140,7 @@
       margin-bottom: 8px;
     }
 
-    .result-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #2b6cb0;
-    }
+    .result-value { font-size: 2.5rem; font-weight: 700; color: #2b6cb0; }
 
     .error {
       margin-top: 16px;
@@ -137,22 +153,71 @@
       display: none;
     }
 
-    .error.visible {
-      display: block;
+    .error.visible { display: block; }
+
+    /* BANCALI MULTIPLI */
+    .add-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
     }
 
-    .reset-btn {
-      margin-top: 12px;
-      background: transparent;
-      color: #4299e1;
-      border: 2px solid #4299e1;
+    .add-row .field { margin-bottom: 0; }
+
+    .add-btn {
+      margin-top: 0;
+      background: #48bb78;
     }
 
-    .reset-btn:hover {
-      background: #ebf8ff;
+    .add-btn:hover { background: #38a169; }
+
+    .bancali-list {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
-    /* Storia */
+    .bancale-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f7fafc;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      color: #4a5568;
+      border-left: 4px solid #48bb78;
+    }
+
+    .bancale-item .bi-num {
+      font-weight: 700;
+      color: #2f855a;
+      margin-right: 8px;
+    }
+
+    .bancale-item .remove-btn {
+      width: auto;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      background: #fff5f5;
+      color: #c53030;
+      border: 1px solid #fc8181;
+      border-radius: 6px;
+      margin-top: 0;
+    }
+
+    .bancale-item .remove-btn:hover { background: #fed7d7; }
+
+    .bancali-empty {
+      color: #a0aec0;
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    /* STORIA */
     .history-container {
       background: white;
       border-radius: 16px;
@@ -160,6 +225,7 @@
       padding: 32px;
       width: 100%;
       max-width: 480px;
+      margin-bottom: 24px;
     }
 
     .history-header {
@@ -167,11 +233,6 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 20px;
-    }
-
-    .history-header h2 {
-      font-size: 1.1rem;
-      color: #1a202c;
     }
 
     .clear-btn {
@@ -185,22 +246,11 @@
       margin-top: 0;
     }
 
-    .clear-btn:hover {
-      background: #fed7d7;
-    }
+    .clear-btn:hover { background: #fed7d7; }
 
-    .history-empty {
-      color: #a0aec0;
-      font-size: 0.9rem;
-      text-align: center;
-      padding: 20px 0;
-    }
+    .history-empty { color: #a0aec0; font-size: 0.9rem; text-align: center; padding: 20px 0; }
 
-    .history-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .history-list { display: flex; flex-direction: column; gap: 12px; }
 
     .history-item {
       background: #f7fafc;
@@ -211,70 +261,135 @@
       border-left: 4px solid #4299e1;
     }
 
-    .history-item .hi-result {
-      font-size: 1.2rem;
+    .history-item.multi { border-left-color: #48bb78; }
+
+    .history-item .hi-badge {
+      display: inline-block;
+      font-size: 0.68rem;
       font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      background: #ebf8ff;
       color: #2b6cb0;
-      margin-bottom: 4px;
     }
 
-    .history-item .hi-details {
-      font-size: 0.78rem;
-      color: #718096;
-      margin-top: 4px;
-    }
+    .history-item.multi .hi-badge { background: #f0fff4; color: #276749; }
 
-    .history-item .hi-time {
-      font-size: 0.72rem;
-      color: #a0aec0;
-      margin-top: 2px;
-    }
+    .history-item .hi-result { font-size: 1.2rem; font-weight: 700; color: #2b6cb0; margin-bottom: 4px; }
+    .history-item.multi .hi-result { color: #276749; }
+
+    .history-item .hi-details { font-size: 0.78rem; color: #718096; margin-top: 4px; }
+    .history-item .hi-time { font-size: 0.72rem; color: #a0aec0; margin-top: 2px; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Calcolo Volume Bancali</h1>
-    <p class="subtitle">Inserisci le dimensioni del bancale per calcolare il volume</p>
 
-    <div class="field">
-      <label>P/V</label>
-      <select id="pv">
-        <option value="300">300</option>
-        <option value="250">250</option>
-        <option value="200">200</option>
-        <option value="167">167</option>
-      </select>
-    </div>
+  <!-- MENU -->
+  <div class="menu">
+    <button class="menu-btn active" onclick="cambiaSezione('singolo')">Bancale Singolo</button>
+    <button class="menu-btn" onclick="cambiaSezione('multiplo')">Bancali Multipli</button>
+  </div>
 
-    <div class="field">
-      <label>X</label>
-      <input type="number" id="lunghezza" placeholder="es. 120" min="0" step="0.01" />
-      <div class="unit">in centimetri (cm)</div>
-    </div>
+  <!-- SEZIONE SINGOLO -->
+  <div class="section active" id="sezione-singolo">
+    <div class="container">
+      <h1>Bancale Singolo</h1>
+      <p class="subtitle">Inserisci le dimensioni del bancale per calcolare il PV</p>
 
-    <div class="field">
-      <label>Y</label>
-      <input type="number" id="profondita" placeholder="es. 80" min="0" step="0.01" />
-      <div class="unit">in centimetri (cm)</div>
-    </div>
+      <div class="field">
+        <label>P/V</label>
+        <select id="pv">
+          <option value="300">300</option>
+          <option value="250">250</option>
+          <option value="200">200</option>
+          <option value="167">167</option>
+        </select>
+      </div>
 
-    <div class="field">
-      <label>Z</label>
-      <input type="number" id="altezza" placeholder="es. 150" min="0" step="0.01" />
-      <div class="unit">in centimetri (cm)</div>
-    </div>
+      <div class="field">
+        <label>X</label>
+        <input type="number" id="lunghezza" placeholder="es. 120" min="0" step="0.01" />
+        <div class="unit">in centimetri (cm)</div>
+      </div>
 
-    <button onclick="calcola()">Calcola</button>
-    <button class="reset-btn" onclick="resetCampi()">Azzera</button>
+      <div class="field">
+        <label>Y</label>
+        <input type="number" id="profondita" placeholder="es. 80" min="0" step="0.01" />
+        <div class="unit">in centimetri (cm)</div>
+      </div>
 
-    <div class="error" id="errore">Inserisci tutti e tre i valori con numeri maggiori di zero.</div>
+      <div class="field">
+        <label>Z</label>
+        <input type="number" id="altezza" placeholder="es. 150" min="0" step="0.01" />
+        <div class="unit">in centimetri (cm)</div>
+      </div>
 
-    <div class="result" id="risultato">
-      <div class="result-label">PV</div>
-      <div class="result-value" id="pv-value">—</div>
+      <button onclick="calcola()">Calcola</button>
+      <button class="reset-btn" onclick="resetCampi()">Azzera</button>
+
+      <div class="error" id="errore">Inserisci tutti e tre i valori con numeri maggiori di zero.</div>
+
+      <div class="result" id="risultato">
+        <div class="result-label">PV</div>
+        <div class="result-value" id="pv-value">—</div>
+      </div>
     </div>
   </div>
 
+  <!-- SEZIONE MULTIPLO -->
+  <div class="section" id="sezione-multiplo">
+    <div class="container">
+      <h1>Bancali Multipli</h1>
+      <p class="subtitle">Aggiungi i bancali della spedizione e calcola il PV totale</p>
+
+      <div class="field">
+        <label>P/V (per tutta la spedizione)</label>
+        <select id="pv-multi">
+          <option value="300">300</option>
+          <option value="250">250</option>
+          <option value="200">200</option>
+          <option value="167">167</option>
+        </select>
+      </div>
+
+      <div class="add-row">
+        <div class="field">
+          <label>X</label>
+          <input type="number" id="mx" placeholder="cm" min="0" step="0.01" />
+        </div>
+        <div class="field">
+          <label>Y</label>
+          <input type="number" id="my" placeholder="cm" min="0" step="0.01" />
+        </div>
+        <div class="field">
+          <label>Z</label>
+          <input type="number" id="mz" placeholder="cm" min="0" step="0.01" />
+        </div>
+      </div>
+
+      <button class="add-btn" onclick="aggiungiBancale()">+ Aggiungi bancale</button>
+
+      <div class="error" id="errore-multi">Inserisci tutti e tre i valori con numeri maggiori di zero.</div>
+
+      <div class="bancali-list" id="bancali-list">
+        <div class="bancali-empty">Nessun bancale aggiunto.</div>
+      </div>
+
+      <button onclick="calcolaMulti()" style="margin-top:20px;">Calcola PV totale</button>
+      <button class="reset-btn" onclick="resetMulti()">Azzera tutto</button>
+
+      <div class="error" id="errore-multi2">Aggiungi almeno un bancale prima di calcolare.</div>
+
+      <div class="result" id="risultato-multi">
+        <div class="result-label">PV Totale</div>
+        <div class="result-value" id="pv-multi-value">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORIA -->
   <div class="history-container">
     <div class="history-header">
       <h2>Storia dei calcoli</h2>
@@ -287,7 +402,17 @@
 
   <script>
     const STORAGE_KEY = 'bancali_storia';
+    let bancaliMultipli = [];
 
+    // --- MENU ---
+    function cambiaSezione(nome) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('sezione-' + nome).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // --- STORIA ---
     function getStoria() {
       try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
       catch { return []; }
@@ -305,24 +430,46 @@
         return;
       }
       contenuto.innerHTML = '<div class="history-list">' +
-        storia.slice().reverse().map(item => `
-          <div class="history-item">
-            <div class="hi-result">PV: ${item.pv}</div>
-            <div class="hi-details">
-              X: ${item.l} cm &nbsp;|&nbsp; Y: ${item.p} cm &nbsp;|&nbsp; Z: ${item.a} cm &nbsp;|&nbsp; Fattore P/V: ${item.fattore}
-            </div>
-            <div class="hi-time">${item.data}</div>
-          </div>
-        `).join('') +
+        storia.slice().reverse().map(item => {
+          if (item.tipo === 'multiplo') {
+            return `
+              <div class="history-item multi">
+                <div class="hi-badge">Bancali Multipli</div>
+                <div class="hi-result">PV Totale: ${item.pv}</div>
+                <div class="hi-details">${item.nbancali} bancali &nbsp;|&nbsp; Fattore P/V: ${item.fattore}</div>
+                <div class="hi-time">${item.data}</div>
+              </div>`;
+          } else {
+            return `
+              <div class="history-item">
+                <div class="hi-badge">Bancale Singolo</div>
+                <div class="hi-result">PV: ${item.pv}</div>
+                <div class="hi-details">X: ${item.l} cm &nbsp;|&nbsp; Y: ${item.p} cm &nbsp;|&nbsp; Z: ${item.a} cm &nbsp;|&nbsp; Fattore P/V: ${item.fattore}</div>
+                <div class="hi-time">${item.data}</div>
+              </div>`;
+          }
+        }).join('') +
       '</div>';
     }
 
+    function cancellaStoria() {
+      if (confirm('Sei sicuro di voler cancellare tutta la storia?')) {
+        salvaStoria([]);
+        renderStoria();
+      }
+    }
+
+    function ora() {
+      const d = new Date();
+      return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // --- BANCALE SINGOLO ---
     function calcola() {
       const l = parseFloat(document.getElementById('lunghezza').value);
       const p = parseFloat(document.getElementById('profondita').value);
       const a = parseFloat(document.getElementById('altezza').value);
       const fattore = parseInt(document.getElementById('pv').value);
-
       const errore = document.getElementById('errore');
       const risultato = document.getElementById('risultato');
 
@@ -333,41 +480,106 @@
       }
 
       errore.classList.remove('visible');
-
       const volumeM3 = (l / 100) * (p / 100) * (a / 100);
       const pvRisultato = (volumeM3 * fattore).toFixed(1);
-
       document.getElementById('pv-value').textContent = pvRisultato;
       risultato.classList.add('visible');
 
-      const ora = new Date();
-      const data = ora.toLocaleDateString('it-IT') + ' ' + ora.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-
       const storia = getStoria();
-      storia.push({ l, p, a, fattore, pv: pvRisultato, data });
+      storia.push({ tipo: 'singolo', l, p, a, fattore, pv: pvRisultato, data: ora() });
       salvaStoria(storia);
       renderStoria();
     }
 
     function resetCampi() {
-      document.getElementById('lunghezza').value = '';
-      document.getElementById('profondita').value = '';
-      document.getElementById('altezza').value = '';
+      ['lunghezza', 'profondita', 'altezza'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('errore').classList.remove('visible');
       document.getElementById('risultato').classList.remove('visible');
     }
 
-    function cancellaStoria() {
-      if (confirm('Sei sicuro di voler cancellare tutta la storia?')) {
-        salvaStoria([]);
-        renderStoria();
+    document.querySelectorAll('#sezione-singolo input').forEach(input => {
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') calcola(); });
+    });
+
+    // --- BANCALI MULTIPLI ---
+    function renderBancali() {
+      const list = document.getElementById('bancali-list');
+      if (bancaliMultipli.length === 0) {
+        list.innerHTML = '<div class="bancali-empty">Nessun bancale aggiunto.</div>';
+        return;
       }
+      list.innerHTML = bancaliMultipli.map((b, i) => `
+        <div class="bancale-item">
+          <span><span class="bi-num">#${i + 1}</span> X:${b.x} Y:${b.y} Z:${b.z} cm</span>
+          <button class="remove-btn" onclick="rimuoviBancale(${i})">Rimuovi</button>
+        </div>
+      `).join('');
     }
 
-    document.querySelectorAll('input').forEach(input => {
-      input.addEventListener('keydown', e => {
-        if (e.key === 'Enter') calcola();
-      });
+    function aggiungiBancale() {
+      const x = parseFloat(document.getElementById('mx').value);
+      const y = parseFloat(document.getElementById('my').value);
+      const z = parseFloat(document.getElementById('mz').value);
+      const errore = document.getElementById('errore-multi');
+
+      if (!x || !y || !z || x <= 0 || y <= 0 || z <= 0) {
+        errore.classList.add('visible');
+        return;
+      }
+
+      errore.classList.remove('visible');
+      bancaliMultipli.push({ x, y, z });
+      document.getElementById('mx').value = '';
+      document.getElementById('my').value = '';
+      document.getElementById('mz').value = '';
+      document.getElementById('mx').focus();
+      renderBancali();
+    }
+
+    function rimuoviBancale(i) {
+      bancaliMultipli.splice(i, 1);
+      renderBancali();
+    }
+
+    function calcolaMulti() {
+      const errore2 = document.getElementById('errore-multi2');
+      const risultato = document.getElementById('risultato-multi');
+
+      if (bancaliMultipli.length === 0) {
+        errore2.classList.add('visible');
+        risultato.classList.remove('visible');
+        return;
+      }
+
+      errore2.classList.remove('visible');
+      const fattore = parseInt(document.getElementById('pv-multi').value);
+
+      const pvTotale = bancaliMultipli.reduce((sum, b) => {
+        const vol = (b.x / 100) * (b.y / 100) * (b.z / 100);
+        return sum + vol * fattore;
+      }, 0);
+
+      const pvRisultato = pvTotale.toFixed(1);
+      document.getElementById('pv-multi-value').textContent = pvRisultato;
+      risultato.classList.add('visible');
+
+      const storia = getStoria();
+      storia.push({ tipo: 'multiplo', nbancali: bancaliMultipli.length, fattore, pv: pvRisultato, data: ora() });
+      salvaStoria(storia);
+      renderStoria();
+    }
+
+    function resetMulti() {
+      bancaliMultipli = [];
+      ['mx', 'my', 'mz'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('errore-multi').classList.remove('visible');
+      document.getElementById('errore-multi2').classList.remove('visible');
+      document.getElementById('risultato-multi').classList.remove('visible');
+      renderBancali();
+    }
+
+    document.querySelectorAll('#sezione-multiplo input').forEach(input => {
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') aggiungiBancale(); });
     });
 
     renderStoria();
