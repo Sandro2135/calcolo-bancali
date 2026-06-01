@@ -16,8 +16,9 @@
       background: #f0f4f8;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       padding: 20px;
     }
 
@@ -28,6 +29,7 @@
       padding: 40px;
       width: 100%;
       max-width: 480px;
+      margin-bottom: 24px;
     }
 
     h1 {
@@ -56,7 +58,7 @@
       letter-spacing: 0.05em;
     }
 
-    input[type="number"] {
+    input[type="number"], select {
       width: 100%;
       padding: 12px 16px;
       border: 2px solid #e2e8f0;
@@ -65,9 +67,10 @@
       color: #1a202c;
       transition: border-color 0.2s;
       outline: none;
+      background: white;
     }
 
-    input[type="number"]:focus {
+    input[type="number"]:focus, select:focus {
       border-color: #4299e1;
     }
 
@@ -123,12 +126,6 @@
       color: #2b6cb0;
     }
 
-    .result-unit {
-      font-size: 1rem;
-      color: #4299e1;
-      margin-top: 4px;
-    }
-
     .error {
       margin-top: 16px;
       padding: 12px 16px;
@@ -154,6 +151,84 @@
     .reset-btn:hover {
       background: #ebf8ff;
     }
+
+    /* Storia */
+    .history-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      padding: 32px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .history-header h2 {
+      font-size: 1.1rem;
+      color: #1a202c;
+    }
+
+    .clear-btn {
+      width: auto;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      background: #fff5f5;
+      color: #c53030;
+      border: 2px solid #fc8181;
+      border-radius: 6px;
+      margin-top: 0;
+    }
+
+    .clear-btn:hover {
+      background: #fed7d7;
+    }
+
+    .history-empty {
+      color: #a0aec0;
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .history-item {
+      background: #f7fafc;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 0.9rem;
+      color: #4a5568;
+      border-left: 4px solid #4299e1;
+    }
+
+    .history-item .hi-result {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #2b6cb0;
+      margin-bottom: 4px;
+    }
+
+    .history-item .hi-details {
+      font-size: 0.78rem;
+      color: #718096;
+      margin-top: 4px;
+    }
+
+    .history-item .hi-time {
+      font-size: 0.72rem;
+      color: #a0aec0;
+      margin-top: 2px;
+    }
   </style>
 </head>
 <body>
@@ -162,40 +237,91 @@
     <p class="subtitle">Inserisci le dimensioni del bancale per calcolare il volume</p>
 
     <div class="field">
+      <label>P/V</label>
+      <select id="pv">
+        <option value="300">300</option>
+        <option value="250">250</option>
+        <option value="200">200</option>
+        <option value="167">167</option>
+      </select>
+    </div>
+
+    <div class="field">
       <label>Lunghezza</label>
-      <input type="number" id="lunghezza" placeholder="es. 1.20" min="0" step="0.01" />
+      <input type="number" id="lunghezza" placeholder="es. 120" min="0" step="0.01" />
       <div class="unit">in centimetri (cm)</div>
     </div>
 
     <div class="field">
       <label>Profondità</label>
-      <input type="number" id="profondita" placeholder="es. 0.80" min="0" step="0.01" />
+      <input type="number" id="profondita" placeholder="es. 80" min="0" step="0.01" />
       <div class="unit">in centimetri (cm)</div>
     </div>
 
     <div class="field">
       <label>Altezza</label>
-      <input type="number" id="altezza" placeholder="es. 1.50" min="0" step="0.01" />
+      <input type="number" id="altezza" placeholder="es. 150" min="0" step="0.01" />
       <div class="unit">in centimetri (cm)</div>
     </div>
 
-    <button onclick="calcola()">Calcola Volume</button>
-    <button class="reset-btn" onclick="reset()">Azzera</button>
+    <button onclick="calcola()">Calcola</button>
+    <button class="reset-btn" onclick="resetCampi()">Azzera</button>
 
     <div class="error" id="errore">Inserisci tutti e tre i valori con numeri maggiori di zero.</div>
 
     <div class="result" id="risultato">
-      <div class="result-label">Volume del bancale</div>
-      <div class="result-value" id="volume-value">—</div>
-      <div class="result-unit">metri cubi (m³)</div>
+      <div class="result-label">PV</div>
+      <div class="result-value" id="pv-value">—</div>
+    </div>
+  </div>
+
+  <div class="history-container">
+    <div class="history-header">
+      <h2>Storia dei calcoli</h2>
+      <button class="clear-btn" onclick="cancellaStoria()">Cancella tutto</button>
+    </div>
+    <div id="history-content">
+      <div class="history-empty">Nessun calcolo ancora.</div>
     </div>
   </div>
 
   <script>
+    const STORAGE_KEY = 'bancali_storia';
+
+    function getStoria() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+      catch { return []; }
+    }
+
+    function salvaStoria(storia) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(storia));
+    }
+
+    function renderStoria() {
+      const storia = getStoria();
+      const contenuto = document.getElementById('history-content');
+      if (storia.length === 0) {
+        contenuto.innerHTML = '<div class="history-empty">Nessun calcolo ancora.</div>';
+        return;
+      }
+      contenuto.innerHTML = '<div class="history-list">' +
+        storia.slice().reverse().map(item => `
+          <div class="history-item">
+            <div class="hi-result">PV: ${item.pv}</div>
+            <div class="hi-details">
+              L: ${item.l} cm &nbsp;|&nbsp; P: ${item.p} cm &nbsp;|&nbsp; A: ${item.a} cm &nbsp;|&nbsp; Fattore P/V: ${item.fattore}
+            </div>
+            <div class="hi-time">${item.data}</div>
+          </div>
+        `).join('') +
+      '</div>';
+    }
+
     function calcola() {
       const l = parseFloat(document.getElementById('lunghezza').value);
       const p = parseFloat(document.getElementById('profondita').value);
       const a = parseFloat(document.getElementById('altezza').value);
+      const fattore = parseInt(document.getElementById('pv').value);
 
       const errore = document.getElementById('errore');
       const risultato = document.getElementById('risultato');
@@ -208,14 +334,22 @@
 
       errore.classList.remove('visible');
 
-      // Conversione da cm a m: dividi per 100 ciascuna dimensione
       const volumeM3 = (l / 100) * (p / 100) * (a / 100);
+      const pvRisultato = (volumeM3 * fattore).toFixed(4);
 
-      document.getElementById('volume-value').textContent = volumeM3.toFixed(4);
+      document.getElementById('pv-value').textContent = pvRisultato;
       risultato.classList.add('visible');
+
+      const ora = new Date();
+      const data = ora.toLocaleDateString('it-IT') + ' ' + ora.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+
+      const storia = getStoria();
+      storia.push({ l, p, a, fattore, pv: pvRisultato, data });
+      salvaStoria(storia);
+      renderStoria();
     }
 
-    function reset() {
+    function resetCampi() {
       document.getElementById('lunghezza').value = '';
       document.getElementById('profondita').value = '';
       document.getElementById('altezza').value = '';
@@ -223,12 +357,20 @@
       document.getElementById('risultato').classList.remove('visible');
     }
 
-    // Calcola premendo Invio su qualsiasi campo
+    function cancellaStoria() {
+      if (confirm('Sei sicuro di voler cancellare tutta la storia?')) {
+        salvaStoria([]);
+        renderStoria();
+      }
+    }
+
     document.querySelectorAll('input').forEach(input => {
       input.addEventListener('keydown', e => {
         if (e.key === 'Enter') calcola();
       });
     });
+
+    renderStoria();
   </script>
 </body>
 </html>
