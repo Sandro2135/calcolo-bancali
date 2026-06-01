@@ -337,19 +337,19 @@
 
       <div class="field">
         <label>X</label>
-        <input type="number" id="lunghezza" placeholder="es. 120" min="0" step="0.01" />
+        <input type="number" id="lunghezza" min="0" step="0.01" />
         <div class="unit">in centimetri (cm)</div>
       </div>
 
       <div class="field">
         <label>Y</label>
-        <input type="number" id="profondita" placeholder="es. 80" min="0" step="0.01" />
+        <input type="number" id="profondita" min="0" step="0.01" />
         <div class="unit">in centimetri (cm)</div>
       </div>
 
       <div class="field">
         <label>Z</label>
-        <input type="number" id="altezza" placeholder="es. 150" min="0" step="0.01" />
+        <input type="number" id="altezza" min="0" step="0.01" />
         <div class="unit">in centimetri (cm)</div>
       </div>
 
@@ -515,6 +515,9 @@
       const pvRisultato = (volumeM3 * fattore).toFixed(1);
       document.getElementById('pv-value').textContent = pvRisultato;
       risultato.classList.add('visible');
+
+      ['lunghezza', 'profondita', 'altezza'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('lunghezza').focus();
 
       const storia = getStoria();
       storia.push({ tipo: 'singolo', l, p, a, fattore, pv: pvRisultato, data: ora() });
