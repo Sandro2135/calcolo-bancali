@@ -337,6 +337,74 @@
       border-radius: 5px;
       padding: 3px 7px;
     }
+
+    /* TASTIERA PERSONALIZZATA */
+    .tastiera-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.3);
+      align-items: flex-end;
+    }
+
+    .tastiera-overlay.visible { display: flex; }
+
+    .tastiera {
+      width: 100%;
+      background: white;
+      border-radius: 16px 16px 0 0;
+      padding: 12px 12px 28px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.18);
+    }
+
+    .tastiera-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .tastiera-grid button {
+      padding: 16px;
+      font-size: 1.25rem;
+      font-weight: 600;
+      background: #f7fafc;
+      color: #1a202c;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      margin-top: 0;
+      cursor: pointer;
+      width: auto;
+      transition: background 0.1s;
+    }
+
+    .tastiera-grid button:active { background: #edf2f7; }
+
+    .btn-del {
+      background: #fff5f5 !important;
+      color: #c53030 !important;
+      border-color: #fc8181 !important;
+    }
+
+    .btn-del:active { background: #fed7d7 !important; }
+
+    .btn-fatto {
+      width: 100%;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      background: #48bb78;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      margin-top: 0;
+      cursor: pointer;
+    }
+
+    .btn-fatto:hover { background: #38a169; }
+
+    input.t-active { border-color: #4299e1 !important; }
   </style>
 </head>
 <body>
@@ -491,12 +559,72 @@
     </div>
   </div>
 
+  <!-- TASTIERA PERSONALIZZATA -->
+  <div class="tastiera-overlay" id="tastiera-overlay" onclick="chiudiTastieraOverlay(event)">
+    <div class="tastiera" onclick="event.stopPropagation()">
+      <div class="tastiera-grid">
+        <button onclick="tkBtn('7')">7</button>
+        <button onclick="tkBtn('8')">8</button>
+        <button onclick="tkBtn('9')">9</button>
+        <button onclick="tkBtn('4')">4</button>
+        <button onclick="tkBtn('5')">5</button>
+        <button onclick="tkBtn('6')">6</button>
+        <button onclick="tkBtn('1')">1</button>
+        <button onclick="tkBtn('2')">2</button>
+        <button onclick="tkBtn('3')">3</button>
+        <button onclick="tkBtn('.')">.</button>
+        <button onclick="tkBtn('0')">0</button>
+        <button class="btn-del" onclick="tkBtn('⌫')">⌫</button>
+      </div>
+      <button class="btn-fatto" onclick="chiudiTastiera()">Fatto ✓</button>
+    </div>
+  </div>
+
   <script>
     const STORAGE_KEY = 'bancali_storia';
     let bancaliMultipli = [];
+    let activeInput = null;
+
+    // --- TASTIERA PERSONALIZZATA ---
+    function initTastiera() {
+      document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.setAttribute('readonly', 'readonly');
+        input.addEventListener('click', () => apriTastiera(input));
+      });
+    }
+
+    function apriTastiera(input) {
+      if (activeInput) activeInput.classList.remove('t-active');
+      activeInput = input;
+      activeInput.classList.add('t-active');
+      document.getElementById('tastiera-overlay').classList.add('visible');
+    }
+
+    function chiudiTastiera() {
+      document.getElementById('tastiera-overlay').classList.remove('visible');
+      if (activeInput) activeInput.classList.remove('t-active');
+      activeInput = null;
+    }
+
+    function chiudiTastieraOverlay(e) {
+      if (e.target === document.getElementById('tastiera-overlay')) chiudiTastiera();
+    }
+
+    function tkBtn(val) {
+      if (!activeInput) return;
+      const cur = activeInput.value;
+      if (val === '⌫') {
+        activeInput.value = cur.slice(0, -1);
+      } else if (val === '.') {
+        if (!cur.includes('.')) activeInput.value = cur + val;
+      } else {
+        activeInput.value = cur + val;
+      }
+    }
 
     // --- MENU ---
     function cambiaSezione(nome, btn) {
+      chiudiTastiera();
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
       document.getElementById('sezione-' + nome).classList.add('active');
@@ -574,6 +702,7 @@
 
     // --- SPEDIZIONE SINGOLA ---
     function calcola() {
+      chiudiTastiera();
       const l = parseFloat(document.getElementById('lunghezza').value);
       const p = parseFloat(document.getElementById('profondita').value);
       const a = parseFloat(document.getElementById('altezza').value);
@@ -602,6 +731,7 @@
     }
 
     function resetCampi() {
+      chiudiTastiera();
       ['lunghezza', 'profondita', 'altezza'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('errore').classList.remove('visible');
       document.getElementById('risultato').classList.remove('visible');
@@ -672,7 +802,7 @@
       document.getElementById('qty-input').value = '';
       document.getElementById('errore-qty').classList.remove('visible');
       document.getElementById('modal-moltiplica-overlay').classList.add('visible');
-      setTimeout(() => document.getElementById('qty-input').focus(), 100);
+      setTimeout(() => apriTastiera(document.getElementById('qty-input')), 100);
     }
 
     function chiudiModalMoltiplica(e) {
@@ -682,6 +812,7 @@
     }
 
     function confermaQty() {
+      chiudiTastiera();
       const qty = parseInt(document.getElementById('qty-input').value);
       const erroreQty = document.getElementById('errore-qty');
 
@@ -703,6 +834,7 @@
     }
 
     function calcolaMulti() {
+      chiudiTastiera();
       const errore2 = document.getElementById('errore-multi2');
       const risultato = document.getElementById('risultato-multi');
 
@@ -731,6 +863,7 @@
     }
 
     function resetMulti() {
+      chiudiTastiera();
       bancaliMultipli = [];
       ['mx', 'my', 'mz'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('errore-multi').classList.remove('visible');
@@ -742,6 +875,8 @@
     document.querySelectorAll('#sezione-multiplo input[type="number"]').forEach(input => {
       input.addEventListener('keydown', e => { if (e.key === 'Enter') aggiungiBancale(); });
     });
+
+    initTastiera();
   </script>
 </body>
 </html>
