@@ -389,6 +389,14 @@
 
     .btn-del:active { background: #fed7d7 !important; }
 
+    .btn-avanti {
+      background: #ebf8ff !important;
+      color: #2b6cb0 !important;
+      border-color: #90cdf4 !important;
+    }
+
+    .btn-avanti:active { background: #bee3f8 !important; }
+
     .btn-fatto {
       width: 100%;
       padding: 14px;
@@ -536,8 +544,8 @@
           onkeydown="if(event.key==='Enter') confermaQty()" />
         <div class="error" id="errore-qty" style="margin-top:10px;">Inserisci un numero intero maggiore di zero.</div>
         <div style="display:flex; gap:8px; margin-top:14px;">
-          <button onclick="confermaQty()" style="flex:1; margin-top:0;">Aggiungi</button>
           <button onclick="chiudiModalMoltiplica()" style="flex:1; margin-top:0; background:#f7fafc; color:#4a5568; border:1.5px solid #e2e8f0;">Annulla</button>
+          <button onclick="confermaQty()" style="flex:1; margin-top:0;">Aggiungi</button>
         </div>
       </div>
     </div>
@@ -563,20 +571,20 @@
   <div class="tastiera-overlay" id="tastiera-overlay" onclick="chiudiTastieraOverlay(event)">
     <div class="tastiera" onclick="event.stopPropagation()">
       <div class="tastiera-grid">
-        <button onclick="tkBtn('7')">7</button>
-        <button onclick="tkBtn('8')">8</button>
-        <button onclick="tkBtn('9')">9</button>
-        <button onclick="tkBtn('4')">4</button>
-        <button onclick="tkBtn('5')">5</button>
-        <button onclick="tkBtn('6')">6</button>
         <button onclick="tkBtn('1')">1</button>
         <button onclick="tkBtn('2')">2</button>
         <button onclick="tkBtn('3')">3</button>
-        <button onclick="tkBtn('.')">.</button>
-        <button onclick="tkBtn('0')">0</button>
+        <button onclick="tkBtn('4')">4</button>
+        <button onclick="tkBtn('5')">5</button>
+        <button onclick="tkBtn('6')">6</button>
+        <button onclick="tkBtn('7')">7</button>
+        <button onclick="tkBtn('8')">8</button>
+        <button onclick="tkBtn('9')">9</button>
         <button class="btn-del" onclick="tkBtn('⌫')">⌫</button>
+        <button onclick="tkBtn('0')">0</button>
+        <button class="btn-avanti" id="btn-avanti" onclick="tkAvanti()">→</button>
       </div>
-      <button class="btn-fatto" onclick="chiudiTastiera()">Fatto ✓</button>
+      <button class="btn-fatto" onclick="chiudiTastiera()">Fatto</button>
     </div>
   </div>
 
@@ -593,10 +601,21 @@
       });
     }
 
+    const NEXT_INPUT = {
+      'lunghezza': 'profondita',
+      'profondita': 'altezza',
+      'altezza': 'lunghezza',
+      'mx': 'my',
+      'my': 'mz',
+      'mz': 'mx'
+    };
+
     function apriTastiera(input) {
       if (activeInput) activeInput.classList.remove('t-active');
       activeInput = input;
       activeInput.classList.add('t-active');
+      document.getElementById('btn-avanti').style.visibility =
+        (input.id === 'qty-input') ? 'hidden' : 'visible';
       document.getElementById('tastiera-overlay').classList.add('visible');
     }
 
@@ -615,11 +634,15 @@
       const cur = activeInput.value;
       if (val === '⌫') {
         activeInput.value = cur.slice(0, -1);
-      } else if (val === '.') {
-        if (!cur.includes('.')) activeInput.value = cur + val;
       } else {
         activeInput.value = cur + val;
       }
+    }
+
+    function tkAvanti() {
+      if (!activeInput) return;
+      const nextId = NEXT_INPUT[activeInput.id];
+      if (nextId) apriTastiera(document.getElementById(nextId));
     }
 
     // --- MENU ---
