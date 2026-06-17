@@ -397,6 +397,11 @@
 
     .btn-avanti:active { background: #bee3f8 !important; }
 
+    #modal-moltiplica-overlay.tastiera-aperta {
+      align-items: flex-start;
+      padding-top: 20px;
+    }
+
     .btn-fatto {
       width: 100%;
       padding: 14px;
@@ -419,15 +424,15 @@
 
   <!-- MENU -->
   <div class="menu">
-    <button class="menu-btn active" onclick="cambiaSezione('singolo', this)">Spedizione Singola</button>
-    <button class="menu-btn" onclick="cambiaSezione('multiplo', this)">Spedizione Multipla</button>
+    <button class="menu-btn active" onclick="cambiaSezione('singolo', this)">Spedizione singola</button>
+    <button class="menu-btn" onclick="cambiaSezione('multiplo', this)">Spedizione multipla</button>
   </div>
 
   <!-- SEZIONE SINGOLO -->
   <div class="section active" id="sezione-singolo">
     <div class="container">
-      <h1>Spedizione Singola</h1>
-      <p class="subtitle">Inserisci le dimensioni del collo per calcolare il PV</p>
+      <h1>Spedizione singola</h1>
+      <p class="subtitle">Seleziona il P/V e inserisci le dimensioni del collo per calcolare il PV</p>
 
       <div class="field">
         <label>P/V</label>
@@ -475,8 +480,8 @@
   <!-- SEZIONE MULTIPLO -->
   <div class="section" id="sezione-multiplo">
     <div class="container">
-      <h1>Spedizione Multipla</h1>
-      <p class="subtitle">Inserisci le dimensioni dei colli per calcolare il PV</p>
+      <h1>Spedizione multipla</h1>
+      <p class="subtitle">Seleziona il P/V e inserisci le dimensioni dei colli per calcolare il PV</p>
 
       <div class="field">
         <label>P/V</label>
@@ -617,10 +622,14 @@
       document.getElementById('btn-avanti').style.visibility =
         (input.id === 'qty-input') ? 'hidden' : 'visible';
       document.getElementById('tastiera-overlay').classList.add('visible');
+      if (document.getElementById('modal-moltiplica-overlay').classList.contains('visible')) {
+        document.getElementById('modal-moltiplica-overlay').classList.add('tastiera-aperta');
+      }
     }
 
     function chiudiTastiera() {
       document.getElementById('tastiera-overlay').classList.remove('visible');
+      document.getElementById('modal-moltiplica-overlay').classList.remove('tastiera-aperta');
       if (activeInput) activeInput.classList.remove('t-active');
       activeInput = null;
     }
