@@ -360,6 +360,8 @@
           <option value="250">250</option>
           <option value="200">200</option>
           <option value="167">167</option>
+          <option value="150">150</option>
+          <option value="100">100</option>
         </select>
       </div>
 
@@ -407,6 +409,8 @@
           <option value="250">250</option>
           <option value="200">200</option>
           <option value="167">167</option>
+          <option value="150">150</option>
+          <option value="100">100</option>
         </select>
       </div>
 
@@ -429,6 +433,7 @@
       </div>
 
       <button class="add-btn" onclick="aggiungiBancale()">+ Aggiungi collo</button>
+      <button class="add-btn" onclick="apriModalMoltiplica()">+ Aggiungi collo e moltiplica</button>
 
       <div class="error" id="errore-multi">Inserisci tutti e tre i valori con numeri maggiori di zero.</div>
 
@@ -445,6 +450,27 @@
       <div class="result" id="risultato-multi">
         <div class="result-label">PV Totale</div>
         <div class="result-value" id="pv-multi-value">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL MOLTIPLICA -->
+  <div class="modal-overlay" id="modal-moltiplica-overlay" onclick="chiudiModalMoltiplica(event)">
+    <div class="modal" style="max-height: unset;">
+      <div class="modal-header">
+        <h2>Aggiungi colli multipli</h2>
+        <button class="modal-close" onclick="chiudiModalMoltiplica()">✕</button>
+      </div>
+      <div style="padding: 20px;">
+        <p style="font-size: 0.85rem; color: #4a5568; margin-bottom: 14px;">Quanti colli della stessa dimensione ci sono?</p>
+        <input type="number" id="qty-input" min="1" step="1" placeholder="es. 10"
+          style="width:100%; padding:9px 12px; border:2px solid #e2e8f0; border-radius:8px; font-size:16px; color:#1a202c; outline:none; background:white;"
+          onkeydown="if(event.key==='Enter') confermaQty()" />
+        <div class="error" id="errore-qty" style="margin-top:10px;">Inserisci un numero intero maggiore di zero.</div>
+        <div style="display:flex; gap:8px; margin-top:14px;">
+          <button onclick="confermaQty()" style="flex:1; margin-top:0;">Aggiungi</button>
+          <button onclick="chiudiModalMoltiplica()" style="flex:1; margin-top:0; background:#f7fafc; color:#4a5568; border:1.5px solid #e2e8f0;">Annulla</button>
+        </div>
       </div>
     </div>
   </div>
@@ -508,9 +534,11 @@
       contenuto.innerHTML = '<div class="history-list">' +
         storia.slice().reverse().map(item => {
           if (item.tipo === 'multiplo') {
-            const righe = (item.spedizioni || []).map((s, i) =>
-              `<div class="hi-spedizione">#${i+1} &nbsp; X: ${s.x} cm &nbsp;|&nbsp; Y: ${s.y} cm &nbsp;|&nbsp; Z: ${s.z} cm</div>`
-            ).join('');
+            const righe = (item.spedizioni || []).map((s, i) => {
+              const qty = s.qty || 1;
+              const prefisso = qty > 1 ? `${qty}×` : `#${i+1}`;
+              return `<div class="hi-spedizione">${prefisso} &nbsp; X: ${s.x} cm &nbsp;|&nbsp; Y: ${s.y} cm &nbsp;|&nbsp; Z: ${s.z} cm</div>`;
+            }).join('');
             return `
               <div class="history-item multi">
                 <div class="hi-badge">Spedizione Multipla</div>
@@ -590,18 +618,33 @@
         list.innerHTML = '<div class="bancali-empty">Nessun collo aggiunto.</div>';
         return;
       }
-      list.innerHTML = bancaliMultipli.map((b, i) => `
-        <div class="bancale-item">
-          <span><span class="bi-num">#${i + 1}</span> X:${b.x} Y:${b.y} Z:${b.z} cm</span>
-          <button class="remove-btn" onclick="rimuoviBancale(${i})">Rimuovi</button>
-        </div>
-      `).join('');
+      let numSingolo = 0;
+      list.innerHTML = bancaliMultipli.map((b, i) => {
+        const qty = b.qty || 1;
+        let etichetta;
+        if (qty > 1) {
+          etichetta = `<span class="bi-num">${qty}×</span> X:${b.x} Y:${b.y} Z:${b.z} cm`;
+        } else {
+          numSingolo++;
+          etichetta = `<span class="bi-num">#${numSingolo}</span> X:${b.x} Y:${b.y} Z:${b.z} cm`;
+        }
+        return `
+          <div class="bancale-item">
+            <span>${etichetta}</span>
+            <button class="remove-btn" onclick="rimuoviBancale(${i})">Rimuovi</button>
+          </div>`;
+      }).join('');
     }
 
-    function aggiungiBancale() {
+    function leggiDimensioniMulti() {
       const x = parseFloat(document.getElementById('mx').value);
       const y = parseFloat(document.getElementById('my').value);
       const z = parseFloat(document.getElementById('mz').value);
+      return { x, y, z };
+    }
+
+    function aggiungiBancale() {
+      const { x, y, z } = leggiDimensioniMulti();
       const errore = document.getElementById('errore-multi');
 
       if (!x || !y || !z || x <= 0 || y <= 0 || z <= 0) {
@@ -610,11 +653,47 @@
       }
 
       errore.classList.remove('visible');
-      bancaliMultipli.push({ x, y, z });
-      document.getElementById('mx').value = '';
-      document.getElementById('my').value = '';
-      document.getElementById('mz').value = '';
+      bancaliMultipli.push({ x, y, z, qty: 1 });
+      ['mx', 'my', 'mz'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('mx').focus();
+      renderBancali();
+    }
+
+    function apriModalMoltiplica() {
+      const { x, y, z } = leggiDimensioniMulti();
+      const errore = document.getElementById('errore-multi');
+
+      if (!x || !y || !z || x <= 0 || y <= 0 || z <= 0) {
+        errore.classList.add('visible');
+        return;
+      }
+
+      errore.classList.remove('visible');
+      document.getElementById('qty-input').value = '';
+      document.getElementById('errore-qty').classList.remove('visible');
+      document.getElementById('modal-moltiplica-overlay').classList.add('visible');
+      setTimeout(() => document.getElementById('qty-input').focus(), 100);
+    }
+
+    function chiudiModalMoltiplica(e) {
+      if (!e || e.target === document.getElementById('modal-moltiplica-overlay')) {
+        document.getElementById('modal-moltiplica-overlay').classList.remove('visible');
+      }
+    }
+
+    function confermaQty() {
+      const qty = parseInt(document.getElementById('qty-input').value);
+      const erroreQty = document.getElementById('errore-qty');
+
+      if (!qty || qty <= 0 || !Number.isInteger(qty)) {
+        erroreQty.classList.add('visible');
+        return;
+      }
+
+      const { x, y, z } = leggiDimensioniMulti();
+      bancaliMultipli.push({ x, y, z, qty });
+      ['mx', 'my', 'mz'].forEach(id => document.getElementById(id).value = '');
+      chiudiModalMoltiplica();
       renderBancali();
     }
 
@@ -638,15 +717,16 @@
 
       const pvTotale = bancaliMultipli.reduce((sum, b) => {
         const vol = (b.x / 100) * (b.y / 100) * (b.z / 100);
-        return sum + vol * fattore;
+        return sum + vol * fattore * (b.qty || 1);
       }, 0);
 
       const pvRisultato = pvTotale.toFixed(1);
       document.getElementById('pv-multi-value').textContent = pvRisultato;
       risultato.classList.add('visible');
 
+      const totaleColli = bancaliMultipli.reduce((sum, b) => sum + (b.qty || 1), 0);
       const storia = getStoria();
-      storia.push({ tipo: 'multiplo', nbancali: bancaliMultipli.length, spedizioni: [...bancaliMultipli], fattore, pv: pvRisultato, data: ora() });
+      storia.push({ tipo: 'multiplo', nbancali: totaleColli, spedizioni: bancaliMultipli.map(b => ({ x: b.x, y: b.y, z: b.z, qty: b.qty || 1 })), fattore, pv: pvRisultato, data: ora() });
       salvaStoria(storia);
     }
 
