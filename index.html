@@ -611,10 +611,8 @@
     const NEXT_INPUT = {
       'lunghezza': 'profondita',
       'profondita': 'altezza',
-      'altezza': 'lunghezza',
       'mx': 'my',
       'my': 'mz',
-      'mz': 'mx'
     };
 
     function apriTastiera(input) {
@@ -654,6 +652,7 @@
       if (!activeInput) return;
       const nextId = NEXT_INPUT[activeInput.id];
       if (nextId) apriTastiera(document.getElementById(nextId));
+      else chiudiTastiera();
     }
 
     // --- MENU ---
