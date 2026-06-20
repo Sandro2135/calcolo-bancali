@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Calcolo Volume Spedizioni</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -420,9 +420,51 @@
     .btn-fatto:hover { background: #38a169; }
 
     input.t-active { border-color: #4299e1 !important; }
+
+    /* BLOCCO ROTAZIONE ORIZZONTALE */
+    .rotate-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #1a202c;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      color: white;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .rotate-overlay svg {
+      width: 64px;
+      height: 64px;
+      opacity: 0.85;
+    }
+
+    .rotate-overlay p {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    @media screen and (orientation: landscape) {
+      .rotate-overlay { display: flex; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- OVERLAY ROTAZIONE -->
+  <div class="rotate-overlay">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="2" width="10" height="16" rx="2"/>
+      <path d="M17 7l3 3-3 3"/>
+      <path d="M20 10H14"/>
+    </svg>
+    <p>Ruota il telefono in verticale</p>
+  </div>
 
   <!-- MENU -->
   <div class="menu">
