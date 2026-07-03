@@ -452,6 +452,191 @@
     @media screen and (orientation: landscape) {
       .rotate-overlay { display: flex; }
     }
+
+    /* HOME SCREEN */
+    .home-screen {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      max-width: 480px;
+      margin-top: 40px;
+    }
+
+    .home-screen.active { display: flex; }
+
+    .home-btn {
+      padding: 34px 20px;
+      border-radius: 16px;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      transition: transform 0.15s;
+      touch-action: manipulation;
+    }
+
+    .home-btn:active { transform: scale(0.97); }
+
+    .home-btn-rettifiche { background: #276749; }
+    .home-btn-orario { background: #2b6cb0; }
+
+    .app-screen { display: none; width: 100%; max-width: 480px; }
+    .app-screen.active { display: block; }
+
+    .back-btn {
+      width: auto;
+      padding: 6px 14px;
+      background: #f7fafc;
+      color: #4a5568;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      margin: 0 0 12px;
+      cursor: pointer;
+    }
+
+    .back-btn:hover { background: #edf2f7; }
+
+    /* ORARIO */
+    .mese-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .mese-nav button {
+      width: auto;
+      padding: 8px 14px;
+      background: #ebf8ff;
+      color: #2b6cb0;
+      border: 2px solid #4299e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      margin-top: 0;
+    }
+
+    .mese-nav button:hover { background: #bee3f8; }
+
+    .mese-label { font-size: 1rem; font-weight: 700; color: #1a202c; text-transform: capitalize; }
+
+    .riepilogo-mese {
+      background: #ebf8ff;
+      border-radius: 10px;
+      padding: 12px 16px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .riepilogo-mese .rm-label { font-size: 0.74rem; color: #2b6cb0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .riepilogo-mese .rm-value { font-size: 1.6rem; font-weight: 700; color: #2b6cb0; }
+    .riepilogo-mese .rm-value.positivo { color: #276749; }
+    .riepilogo-mese .rm-value.negativo { color: #c53030; }
+
+    .tabella-wrap {
+      overflow-y: auto;
+      max-height: 65vh;
+      border: 1.5px solid #cbd5e0;
+      border-radius: 8px;
+    }
+
+    table.tabella-orario {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 0.68rem;
+    }
+
+    .tabella-orario th, .tabella-orario td {
+      border: 1px solid #cbd5e0;
+      text-align: center;
+      padding: 5px 2px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .tabella-orario col.col-data { width: 20%; }
+    .tabella-orario col.col-ora { width: 15%; }
+    .tabella-orario col.col-totale { width: 20%; }
+
+    .tabella-orario thead th {
+      position: sticky;
+      top: 0;
+      background: #276749;
+      color: white;
+      font-size: 0.64rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      z-index: 1;
+      padding: 7px 2px;
+    }
+
+    .tabella-orario tbody tr:nth-child(even) { background: #f7fafc; }
+    .tabella-orario tbody tr.weekend { background: #fffaf0; }
+
+    .cella-data { font-weight: 600; color: #4a5568; font-size: 0.66rem; }
+
+    .cella-orario { color: #2b6cb0; font-weight: 600; cursor: pointer; touch-action: manipulation; }
+    .cella-orario.vuota { color: #cbd5e0; font-weight: 400; }
+    .cella-orario.t-active { background: #bee3f8 !important; }
+
+    .cella-totale { font-weight: 700; color: #276749; }
+    .cella-totale.vuota { color: #cbd5e0; font-weight: 400; }
+
+    /* RUOTA ORARIO (stile selettore sveglia iPhone) */
+    .ruota-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .ruota-selezione-band {
+      position: absolute;
+      top: 50%;
+      left: 20px;
+      right: 20px;
+      height: 40px;
+      transform: translateY(-50%);
+      background: #ebf8ff;
+      border-radius: 8px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ruota-col {
+      position: relative;
+      width: 90px;
+      height: 100%;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      z-index: 1;
+    }
+
+    .ruota-col::-webkit-scrollbar { display: none; }
+
+    .ruota-item {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #a0aec0;
+      scroll-snap-align: center;
+    }
+
+    .ruota-item.selezionato { color: #1a202c; font-weight: 700; }
+
+    .ruota-separatore { font-size: 1.4rem; font-weight: 700; color: #1a202c; margin: 0 6px; z-index: 1; }
   </style>
 </head>
 <body>
@@ -466,13 +651,23 @@
     <p>Ruota il telefono in verticale</p>
   </div>
 
-  <!-- MENU -->
-  <div class="menu">
-    <button class="menu-btn active" onclick="cambiaSezione('singolo', this)">Spedizione singola</button>
-    <button class="menu-btn" onclick="cambiaSezione('multiplo', this)">Spedizione multipla</button>
+  <!-- HOME SCREEN -->
+  <div class="home-screen active" id="home-screen">
+    <div class="home-btn home-btn-rettifiche" onclick="apriApp('rettifiche')">Rettifiche</div>
+    <div class="home-btn home-btn-orario" onclick="apriApp('orario')">Orario</div>
   </div>
 
-  <!-- SEZIONE SINGOLO -->
+  <!-- APP RETTIFICHE -->
+  <div class="app-screen" id="app-rettifiche">
+    <button class="back-btn" onclick="tornaHome()">‹ Home</button>
+
+    <!-- MENU -->
+    <div class="menu">
+      <button class="menu-btn active" onclick="cambiaSezione('singolo', this)">Spedizione singola</button>
+      <button class="menu-btn" onclick="cambiaSezione('multiplo', this)">Spedizione multipla</button>
+    </div>
+
+    <!-- SEZIONE SINGOLO -->
   <div class="section active" id="sezione-singolo">
     <div class="container">
       <h1>Spedizione singola</h1>
@@ -576,6 +771,63 @@
         <div class="result-label">PV Totale</div>
         <div class="result-value" id="pv-multi-value">—</div>
       </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- APP ORARIO -->
+  <div class="app-screen" id="app-orario">
+    <button class="back-btn" onclick="tornaHome()">‹ Home</button>
+
+    <div class="container">
+      <div class="mese-nav">
+        <button onclick="cambiaMese(-1)">‹</button>
+        <div class="mese-label" id="mese-label">—</div>
+        <button onclick="cambiaMese(1)">›</button>
+      </div>
+
+      <div class="riepilogo-mese">
+        <div class="rm-label">Scostamento dal monte ore</div>
+        <div class="rm-value" id="rm-scostamento">0h</div>
+      </div>
+
+      <div class="tabella-wrap">
+        <table class="tabella-orario">
+          <colgroup>
+            <col class="col-data" />
+            <col class="col-ora" />
+            <col class="col-ora" />
+            <col class="col-ora" />
+            <col class="col-ora" />
+            <col class="col-totale" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Entrata</th>
+              <th>Uscita</th>
+              <th>Entrata</th>
+              <th>Uscita</th>
+              <th>Totale</th>
+            </tr>
+          </thead>
+          <tbody id="tabella-orario-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- RUOTA ORARIO -->
+  <div class="tastiera-overlay" id="ruota-overlay" onclick="chiudiRuotaOverlay(event)">
+    <div class="tastiera" onclick="event.stopPropagation()">
+      <div class="ruota-container">
+        <div class="ruota-selezione-band"></div>
+        <div class="ruota-col" id="ruota-ore"></div>
+        <div class="ruota-separatore">:</div>
+        <div class="ruota-col" id="ruota-minuti"></div>
+      </div>
+      <button class="btn-avanti" id="btn-avanti-ruota" onclick="ruotaAvanti()" style="width:100%; margin-bottom:8px;">→ Avanti</button>
+      <button class="btn-fatto" onclick="chiudiRuota()">Fatto</button>
     </div>
   </div>
 
@@ -950,6 +1202,240 @@
     document.querySelectorAll('#sezione-multiplo input[type="number"]').forEach(input => {
       input.addEventListener('keydown', e => { if (e.key === 'Enter') aggiungiBancale(); });
     });
+
+    // --- HOME / NAVIGAZIONE APP ---
+    function apriApp(nome) {
+      document.getElementById('home-screen').classList.remove('active');
+      document.getElementById('app-' + nome).classList.add('active');
+      if (nome === 'orario') renderMeseOrario();
+    }
+
+    function tornaHome() {
+      chiudiTastiera();
+      chiudiRuota();
+      document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('home-screen').classList.add('active');
+    }
+
+    // --- ORARIO ---
+    const ORARIO_KEY = 'orario_giorni';
+    const MESI = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+    const CAMPI_ORARIO = ['e1', 'u1', 'e2', 'u2'];
+    const CAMPO_SUCCESSIVO = { e1: 'u1', u1: 'e2', e2: 'u2' };
+
+    const oggiOrario = new Date();
+    let orarioMeseCorrente = oggiOrario.getMonth();
+    let orarioAnnoCorrente = oggiOrario.getFullYear();
+    let activeOrarioCell = null;
+
+    function getOrarioMap() {
+      try { return JSON.parse(localStorage.getItem(ORARIO_KEY)) || {}; }
+      catch { return {}; }
+    }
+
+    let orarioMap = getOrarioMap();
+
+    function salvaOrarioMap() {
+      localStorage.setItem(ORARIO_KEY, JSON.stringify(orarioMap));
+    }
+
+    function pad2(n) { return String(n).padStart(2, '0'); }
+
+    function dataISO(anno, meseIdx, giorno) {
+      return `${anno}-${pad2(meseIdx + 1)}-${pad2(giorno)}`;
+    }
+
+    function minutiDaHHMM(hhmm) {
+      const [h, m] = hhmm.split(':').map(Number);
+      return h * 60 + m;
+    }
+
+    function minutiTurno(entrata, uscita) {
+      if (!entrata || !uscita) return 0;
+      let diff = minutiDaHHMM(uscita) - minutiDaHHMM(entrata);
+      if (diff < 0) diff += 24 * 60;
+      return diff;
+    }
+
+    function minutiGiorno(g) {
+      if (!g) return 0;
+      return minutiTurno(g.e1, g.u1) + minutiTurno(g.e2, g.u2);
+    }
+
+    function formattaMinuti(min) {
+      const h = Math.floor(min / 60);
+      const m = min % 60;
+      return m === 0 ? `${h}h` : `${h}h ${m}'`;
+    }
+
+    function cambiaMese(delta) {
+      orarioMeseCorrente += delta;
+      if (orarioMeseCorrente < 0) { orarioMeseCorrente = 11; orarioAnnoCorrente--; }
+      if (orarioMeseCorrente > 11) { orarioMeseCorrente = 0; orarioAnnoCorrente++; }
+      renderMeseOrario();
+    }
+
+    function renderMeseOrario() {
+      document.getElementById('mese-label').textContent = MESI[orarioMeseCorrente] + ' ' + orarioAnnoCorrente;
+
+      const numGiorni = new Date(orarioAnnoCorrente, orarioMeseCorrente + 1, 0).getDate();
+      const oggi = new Date(); oggi.setHours(0, 0, 0, 0);
+      const primoDelMese = new Date(orarioAnnoCorrente, orarioMeseCorrente, 1);
+
+      let fineConteggio;
+      if (orarioAnnoCorrente === oggi.getFullYear() && orarioMeseCorrente === oggi.getMonth()) {
+        fineConteggio = oggi.getDate();
+      } else if (primoDelMese > oggi) {
+        fineConteggio = 0;
+      } else {
+        fineConteggio = numGiorni;
+      }
+
+      let feriali = 0;
+      let minutiLavorati = 0;
+      const righe = [];
+
+      for (let giorno = 1; giorno <= numGiorni; giorno++) {
+        const d = new Date(orarioAnnoCorrente, orarioMeseCorrente, giorno);
+        const dow = d.getDay();
+        if (giorno <= fineConteggio && dow >= 1 && dow <= 5) feriali++;
+
+        const data = dataISO(orarioAnnoCorrente, orarioMeseCorrente, giorno);
+        const g = orarioMap[data] || {};
+        minutiLavorati += minutiGiorno(g);
+
+        righe.push({ data, giorno, weekend: dow === 0 || dow === 6, g });
+      }
+
+      const scostamento = minutiLavorati - feriali * 6 * 60;
+      const rmValue = document.getElementById('rm-scostamento');
+      const segno = scostamento > 0 ? '+' : (scostamento < 0 ? '-' : '');
+      rmValue.textContent = scostamento === 0 ? '0h' : `${segno}${formattaMinuti(Math.abs(scostamento))}`;
+      rmValue.classList.toggle('positivo', scostamento > 0);
+      rmValue.classList.toggle('negativo', scostamento < 0);
+
+      const tbody = document.getElementById('tabella-orario-body');
+      tbody.innerHTML = righe.map(r => {
+        const dataFmt = `${pad2(r.giorno)}/${pad2(orarioMeseCorrente + 1)}`;
+        const minTot = minutiGiorno(r.g);
+        const totaleTxt = minTot > 0 ? formattaMinuti(minTot) : '—';
+        const celle = CAMPI_ORARIO.map(campo => {
+          const val = r.g[campo] || '';
+          return `<td class="cella-orario${val ? '' : ' vuota'}" data-data="${r.data}" data-campo="${campo}">${val || '--:--'}</td>`;
+        }).join('');
+        return `
+          <tr class="${r.weekend ? 'weekend' : ''}">
+            <td class="cella-data">${dataFmt}</td>
+            ${celle}
+            <td class="cella-totale${minTot > 0 ? '' : ' vuota'}">${totaleTxt}</td>
+          </tr>`;
+      }).join('');
+
+      tbody.querySelectorAll('.cella-orario').forEach(cella => {
+        cella.addEventListener('click', () => apriRuotaOrario(cella));
+      });
+    }
+
+    // --- RUOTA ORARIO (celle tabella, stile selettore sveglia) ---
+    const RUOTA_ITEM_H = 40;
+    const RUOTA_PADDING = 80; // (5 righe visibili - 1) / 2 * 40px, per centrare primo/ultimo valore
+
+    function apriRuotaOrario(cella) {
+      if (activeOrarioCell) activeOrarioCell.classList.remove('t-active');
+      activeOrarioCell = cella;
+      activeOrarioCell.classList.add('t-active');
+
+      const data = cella.dataset.data;
+      const campo = cella.dataset.campo;
+      const valoreSalvato = (orarioMap[data] && orarioMap[data][campo]) || '';
+
+      let oreIniziali, minIniziali;
+      if (valoreSalvato) {
+        const [h, m] = valoreSalvato.split(':').map(Number);
+        oreIniziali = h;
+        minIniziali = Math.round(m / 15) * 15;
+        if (minIniziali === 60) { minIniziali = 0; oreIniziali = (oreIniziali + 1) % 24; }
+      } else {
+        const adesso = new Date();
+        oreIniziali = adesso.getHours();
+        minIniziali = Math.round(adesso.getMinutes() / 15) * 15;
+        if (minIniziali === 60) { minIniziali = 0; oreIniziali = (oreIniziali + 1) % 24; }
+      }
+
+      costruisciRuota(document.getElementById('ruota-ore'), Array.from({ length: 24 }, (_, i) => i), oreIniziali, v => salvaCellaRuota(v, null));
+      costruisciRuota(document.getElementById('ruota-minuti'), [0, 15, 30, 45], minIniziali, v => salvaCellaRuota(null, v));
+
+      salvaCellaRuota(oreIniziali, minIniziali);
+      document.getElementById('ruota-overlay').classList.add('visible');
+    }
+
+    function costruisciRuota(container, valori, valoreIniziale, onCambio) {
+      container.innerHTML = `<div style="height:${RUOTA_PADDING}px"></div>` +
+        valori.map(v => `<div class="ruota-item" data-val="${v}">${pad2(v)}</div>`).join('') +
+        `<div style="height:${RUOTA_PADDING}px"></div>`;
+
+      const idx = Math.max(0, valori.indexOf(valoreIniziale));
+      container.scrollTop = idx * RUOTA_ITEM_H;
+      evidenziaSelezione(container, valoreIniziale);
+
+      let timeout;
+      container.onscroll = () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          const idxSel = Math.max(0, Math.min(valori.length - 1, Math.round(container.scrollTop / RUOTA_ITEM_H)));
+          const val = valori[idxSel];
+          evidenziaSelezione(container, val);
+          onCambio(val);
+        }, 80);
+      };
+    }
+
+    function evidenziaSelezione(container, val) {
+      container.querySelectorAll('.ruota-item').forEach(el => {
+        el.classList.toggle('selezionato', parseInt(el.dataset.val) === val);
+      });
+    }
+
+    function salvaCellaRuota(ore, minuti) {
+      if (!activeOrarioCell) return;
+      if (ore === null) ore = activeOrarioCell.dataset.oreTmp;
+      if (minuti === null) minuti = activeOrarioCell.dataset.minTmp;
+      activeOrarioCell.dataset.oreTmp = ore;
+      activeOrarioCell.dataset.minTmp = minuti;
+
+      const valore = `${pad2(ore)}:${pad2(minuti)}`;
+      const data = activeOrarioCell.dataset.data;
+      const campo = activeOrarioCell.dataset.campo;
+      if (!orarioMap[data]) orarioMap[data] = {};
+      orarioMap[data][campo] = valore;
+      salvaOrarioMap();
+
+      activeOrarioCell.textContent = valore;
+      activeOrarioCell.classList.remove('vuota');
+    }
+
+    function chiudiRuotaOverlay(e) {
+      if (e.target === document.getElementById('ruota-overlay')) chiudiRuota();
+    }
+
+    function chiudiRuota() {
+      document.getElementById('ruota-overlay').classList.remove('visible');
+      if (activeOrarioCell) activeOrarioCell.classList.remove('t-active');
+      activeOrarioCell = null;
+      renderMeseOrario();
+    }
+
+    function ruotaAvanti() {
+      if (!activeOrarioCell) return;
+      const data = activeOrarioCell.dataset.data;
+      const campo = activeOrarioCell.dataset.campo;
+      const prossimo = CAMPO_SUCCESSIVO[campo];
+      if (prossimo) {
+        const prossimaCella = document.querySelector(`.cella-orario[data-data="${data}"][data-campo="${prossimo}"]`);
+        if (prossimaCella) { apriRuotaOrario(prossimaCella); return; }
+      }
+      chiudiRuota();
+    }
 
     initTastiera();
   </script>
