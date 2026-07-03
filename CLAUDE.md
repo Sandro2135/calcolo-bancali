@@ -1,11 +1,11 @@
-# Calcolo Volume Spedizioni
+# Calcolo Volume Spedizioni + Orario
 
-App browser per calcolare il volume di colli/spedizioni moltiplicato per un fattore P/V. Usata da iPhone sul lavoro.
+App browser con due funzioni: **Rettifiche** (calcolo volume di colli/spedizioni moltiplicato per un fattore P/V) e **Orario** (tabella mensile ore di lavoro). Usata da iPhone sul lavoro.
 
 ## Stack
 
 - Vanilla HTML/CSS/JS (tutto in un singolo `index.html`, no framework, no build step)
-- localStorage per lo storico dei calcoli
+- localStorage per storico Rettifiche e dati Orario
 - Hosting: GitHub Pages
 
 ## Repository e sito
@@ -24,7 +24,14 @@ App browser per calcolare il volume di colli/spedizioni moltiplicato per un fatt
 
 ## Funzionalità
 
-### Menu
+### Home
+- Prima schermata all'apertura dell'app: due tasti grandi, centrati verticalmente nello schermo
+  - **Rettifiche** (verde scuro `#276749`) → apre il menu Spedizione singola/multipla
+  - **Orario** (blu `#2b6cb0`) → apre la tabella oraria mensile
+- Tasto "‹ Home" in alto in entrambe le sezioni per tornare alla home
+- Sfondo app: `#f0dccb` (beige/terracotta chiaro)
+
+### Menu (dentro Rettifiche)
 - Due sezioni: **Spedizione singola** e **Spedizione multipla**
 - Tasto attivo: verde scuro `#276749`
 
@@ -60,6 +67,28 @@ App browser per calcolare il volume di colli/spedizioni moltiplicato per un fatt
 - Il tasto → è nascosto nel popup "quanti colli" (un solo campo)
 - Quando la tastiera è aperta con il modal moltiplica visibile: il modal si sposta in alto (classe `tastiera-aperta`)
 
+### Orario
+- Tabella mensile "tipo Excel" con 6 colonne: **Data** (gg/mm/aa) | Entrata | Uscita | Entrata | Uscita | Totale
+- Una riga per **ogni giorno del mese** (anche weekend), non solo i giorni compilati
+- Navigazione mese con frecce ‹ › sopra la tabella
+- **Riepilogo "Plus/minus"** in cima: scostamento tra ore lavorate nel mese e monte ore teorico (6h × giorni feriali lun-ven già trascorsi nel mese, tutto il mese se è passato, zero se è futuro)
+  - Formato `+Xh Y'` / `-Xh Y'`; se sotto l'ora mostra solo i minuti (es. `+45'`)
+- **Inserimento orario**: tocchi una cella Entrata/Uscita e si apre una rotella stile sveglia iPhone (due colonne: ore 00-23, minuti solo 00/15/30/45), fascia centrale evidenziata
+  - Cella vuota → rotella parte da "--" su ore e minuti
+  - Cella già compilata → rotella parte dal valore salvato
+  - **"--"** in cima a entrambe le rotelle: serve **su entrambe** per svuotare la cella (una sola non basta)
+  - **"→ Avanti"**: conferma e passa al campo successivo della riga (Entrata→Uscita→Entrata2→Uscita2→chiude)
+  - **"Fatto"**: chiude la rotella e aggiorna Totale/Plus-minus
+- **Codici speciali per turno** (sotto la rotella, 4 pulsanti): **P** (permesso), **F** (ferie), **M** (malattia), **/** (assenza)
+  - Impostano l'intero turno (sia entrata che uscita di quella metà giornata) sulla lettera; si vede solo l'iniziale nella cella
+  - P/F/M **completano sempre la giornata a 6h** (se lavori solo mezza giornata, l'altra metà con una di queste lettere porta il totale a 6h)
+  - **Assenza "/" non completa**: le ore mancanti restano scoperte (scostamento negativo nei feriali; nei weekend non ha comunque effetto perché il monte ore lì è già zero)
+  - Per segnare un giorno intero, si imposta lo stesso codice su entrambi i turni
+  - Reset: si toglie un codice riaprendo la rotella e mettendo "--" su ore e minuti
+- **Colonna Totale**: mostra `Xh Y'` (o solo `Y'` se sotto l'ora), oppure **"/"** per i giorni con assenza intera o weekend senza orari — ma **solo se il giorno è già passato o è oggi** (i weekend futuri restano "—"). Weekend con orari realmente lavorati mostrano le ore effettive, non "/"
+- Righe tabella tutte bianche (nessuna alternanza di colore)
+- Key localStorage: `orario_giorni` — oggetto (non array) indicizzato per data
+
 ## Struttura dati localStorage
 
 ```js
@@ -69,6 +98,14 @@ App browser per calcolare il volume di colli/spedizioni moltiplicato per un fatt
 // Spedizione multipla
 { tipo: 'multiplo', nbancali, spedizioni: [{x, y, z, qty}, ...], fattore, pv, data }
 // qty >= 1; qty > 1 = colli raggruppati
+
+// Orario (key: orario_giorni), oggetto indicizzato per data 'YYYY-MM-DD'
+{
+  "2026-07-04": { e1: '08:00', u1: '12:00', e2: '13:00', u2: '17:00' },
+  "2026-07-05": { e1: 'P', u1: 'P', e2: 'P', u2: 'P' } // giorno intero permesso
+}
+// e1/u1 = turno mattina (entrata/uscita), e2/u2 = turno pomeriggio
+// valori possibili: 'HH:MM', '' (vuoto), oppure uno dei codici speciali 'P' 'F' 'M' '/'
 ```
 
 ## Stile tasti
