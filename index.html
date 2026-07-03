@@ -9,7 +9,7 @@
 
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #f0f4f8;
+      background: #f2e9d8;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -559,8 +559,8 @@
       white-space: nowrap;
     }
 
-    .tabella-orario col.col-data { width: 20%; }
-    .tabella-orario col.col-ora { width: 15%; }
+    .tabella-orario col.col-data { width: 24%; }
+    .tabella-orario col.col-ora { width: 14%; }
     .tabella-orario col.col-totale { width: 20%; }
 
     .tabella-orario thead th {
@@ -591,46 +591,6 @@
 
     .cella-totale { font-weight: 700; color: #276749; }
     .cella-totale.vuota { color: #cbd5e0; font-weight: 400; }
-
-    .print-btn {
-      background: #2b6cb0;
-      color: white;
-      border: none;
-      margin-top: 14px;
-    }
-
-    .print-btn:hover { background: #2c5282; }
-
-    /* STAMPA / PDF (A4 verticale) */
-    @media print {
-      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-
-      body { padding: 0; background: white; }
-
-      .home-screen, .back-btn, .rotate-overlay, .tastiera-overlay,
-      #app-rettifiche, .print-btn, .mese-nav button {
-        display: none !important;
-      }
-
-      .app-screen, .app-screen.active { display: block !important; max-width: none; width: 100%; }
-
-      .container { box-shadow: none; padding: 0; border-radius: 0; }
-
-      .mese-nav { justify-content: center; margin-bottom: 12px; }
-      .mese-label { font-size: 1.4rem; }
-
-      .riepilogo-mese { border: 1px solid #000; background: none; }
-
-      .tabella-wrap { max-height: none; overflow: visible; border: 1px solid #000; }
-
-      table.tabella-orario { font-size: 11pt; }
-      .tabella-orario th, .tabella-orario td { padding: 5px 4px; }
-      .tabella-orario thead th { position: static; }
-
-      .tabella-orario tbody tr { page-break-inside: avoid; }
-
-      @page { size: A4 portrait; margin: 15mm; }
-    }
 
     /* RUOTA ORARIO (stile selettore sveglia iPhone) */
     .ruota-container {
@@ -864,7 +824,7 @@
       </div>
 
       <div class="riepilogo-mese">
-        <div class="rm-label">Scostamento dal monte ore</div>
+        <div class="rm-label">Plus/minus</div>
         <div class="rm-value" id="rm-scostamento">0h</div>
       </div>
 
@@ -891,8 +851,6 @@
           <tbody id="tabella-orario-body"></tbody>
         </table>
       </div>
-
-      <button class="print-btn" onclick="window.print()">🖨️ Stampa / Salva PDF</button>
     </div>
   </div>
 
@@ -1368,6 +1326,11 @@
       return m === 0 ? `${h}h` : `${h}h ${m}'`;
     }
 
+    function formattaScostamento(minAbs) {
+      if (minAbs < 60) return `${minAbs}'`;
+      return formattaMinuti(minAbs);
+    }
+
     function cambiaMese(delta) {
       orarioMeseCorrente += delta;
       if (orarioMeseCorrente < 0) { orarioMeseCorrente = 11; orarioAnnoCorrente--; }
@@ -1410,15 +1373,19 @@
       const scostamento = minutiLavorati - feriali * 6 * 60;
       const rmValue = document.getElementById('rm-scostamento');
       const segno = scostamento > 0 ? '+' : (scostamento < 0 ? '-' : '');
-      rmValue.textContent = scostamento === 0 ? '0h' : `${segno}${formattaMinuti(Math.abs(scostamento))}`;
+      rmValue.textContent = scostamento === 0 ? '0h' : `${segno}${formattaScostamento(Math.abs(scostamento))}`;
       rmValue.classList.toggle('positivo', scostamento > 0);
       rmValue.classList.toggle('negativo', scostamento < 0);
 
       const tbody = document.getElementById('tabella-orario-body');
       tbody.innerHTML = righe.map(r => {
-        const dataFmt = `${pad2(r.giorno)}/${pad2(orarioMeseCorrente + 1)}`;
+        const dataFmt = `${pad2(r.giorno)}/${pad2(orarioMeseCorrente + 1)}/${String(orarioAnnoCorrente).slice(-2)}`;
         const minTot = minutiGiorno(r.g);
-        const totaleTxt = minTot > 0 ? formattaMinuti(minTot) : '—';
+        const assenzaGiornoIntero = r.g.e1 === '/' && r.g.e2 === '/';
+        const weekendVuoto = r.weekend && minTot === 0 && r.giorno <= fineConteggio;
+        let totaleTxt;
+        if (assenzaGiornoIntero || weekendVuoto) totaleTxt = '/';
+        else totaleTxt = minTot > 0 ? formattaMinuti(minTot) : '—';
         const celle = CAMPI_ORARIO.map(campo => {
           const val = r.g[campo] || '';
           let classi = 'cella-orario';
