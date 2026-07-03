@@ -457,10 +457,11 @@
     .home-screen {
       display: none;
       flex-direction: column;
+      justify-content: center;
       gap: 16px;
       width: 100%;
       max-width: 480px;
-      margin-top: 40px;
+      min-height: calc(100vh - 28px);
     }
 
     .home-screen.active { display: flex; }
@@ -590,6 +591,46 @@
 
     .cella-totale { font-weight: 700; color: #276749; }
     .cella-totale.vuota { color: #cbd5e0; font-weight: 400; }
+
+    .print-btn {
+      background: #2b6cb0;
+      color: white;
+      border: none;
+      margin-top: 14px;
+    }
+
+    .print-btn:hover { background: #2c5282; }
+
+    /* STAMPA / PDF (A4 verticale) */
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+      body { padding: 0; background: white; }
+
+      .home-screen, .back-btn, .rotate-overlay, .tastiera-overlay,
+      #app-rettifiche, .print-btn, .mese-nav button {
+        display: none !important;
+      }
+
+      .app-screen, .app-screen.active { display: block !important; max-width: none; width: 100%; }
+
+      .container { box-shadow: none; padding: 0; border-radius: 0; }
+
+      .mese-nav { justify-content: center; margin-bottom: 12px; }
+      .mese-label { font-size: 1.4rem; }
+
+      .riepilogo-mese { border: 1px solid #000; background: none; }
+
+      .tabella-wrap { max-height: none; overflow: visible; border: 1px solid #000; }
+
+      table.tabella-orario { font-size: 11pt; }
+      .tabella-orario th, .tabella-orario td { padding: 5px 4px; }
+      .tabella-orario thead th { position: static; }
+
+      .tabella-orario tbody tr { page-break-inside: avoid; }
+
+      @page { size: A4 portrait; margin: 15mm; }
+    }
 
     /* RUOTA ORARIO (stile selettore sveglia iPhone) */
     .ruota-container {
@@ -850,6 +891,8 @@
           <tbody id="tabella-orario-body"></tbody>
         </table>
       </div>
+
+      <button class="print-btn" onclick="window.print()">🖨️ Stampa / Salva PDF</button>
     </div>
   </div>
 
@@ -1420,10 +1463,8 @@
         minIniziali = Math.round(m / 15) * 15;
         if (minIniziali === 60) { minIniziali = 0; oreIniziali = (oreIniziali + 1) % 24; }
       } else {
-        const adesso = new Date();
-        oreIniziali = adesso.getHours();
-        minIniziali = Math.round(adesso.getMinutes() / 15) * 15;
-        if (minIniziali === 60) { minIniziali = 0; oreIniziali = (oreIniziali + 1) % 24; }
+        oreIniziali = -1;
+        minIniziali = -1;
       }
 
       costruisciRuota(document.getElementById('ruota-ore'), [-1, ...Array.from({ length: 24 }, (_, i) => i)], oreIniziali, v => salvaCellaRuota(v, null));
