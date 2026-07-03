@@ -1362,16 +1362,20 @@
         if (minIniziali === 60) { minIniziali = 0; oreIniziali = (oreIniziali + 1) % 24; }
       }
 
-      costruisciRuota(document.getElementById('ruota-ore'), Array.from({ length: 24 }, (_, i) => i), oreIniziali, v => salvaCellaRuota(v, null));
-      costruisciRuota(document.getElementById('ruota-minuti'), [0, 15, 30, 45], minIniziali, v => salvaCellaRuota(null, v));
+      costruisciRuota(document.getElementById('ruota-ore'), [-1, ...Array.from({ length: 24 }, (_, i) => i)], oreIniziali, v => salvaCellaRuota(v, null));
+      costruisciRuota(document.getElementById('ruota-minuti'), [-1, 0, 15, 30, 45], minIniziali, v => salvaCellaRuota(null, v));
 
       salvaCellaRuota(oreIniziali, minIniziali);
       document.getElementById('ruota-overlay').classList.add('visible');
     }
 
+    function formattaValoreRuota(v) {
+      return v === -1 ? '--' : pad2(v);
+    }
+
     function costruisciRuota(container, valori, valoreIniziale, onCambio) {
       container.innerHTML = `<div style="height:${RUOTA_PADDING}px"></div>` +
-        valori.map(v => `<div class="ruota-item" data-val="${v}">${pad2(v)}</div>`).join('') +
+        valori.map(v => `<div class="ruota-item" data-val="${v}">${formattaValoreRuota(v)}</div>`).join('') +
         `<div style="height:${RUOTA_PADDING}px"></div>`;
 
       const idx = Math.max(0, valori.indexOf(valoreIniziale));
@@ -1398,20 +1402,25 @@
 
     function salvaCellaRuota(ore, minuti) {
       if (!activeOrarioCell) return;
-      if (ore === null) ore = activeOrarioCell.dataset.oreTmp;
-      if (minuti === null) minuti = activeOrarioCell.dataset.minTmp;
+      if (ore === null) ore = Number(activeOrarioCell.dataset.oreTmp);
+      if (minuti === null) minuti = Number(activeOrarioCell.dataset.minTmp);
       activeOrarioCell.dataset.oreTmp = ore;
       activeOrarioCell.dataset.minTmp = minuti;
 
-      const valore = `${pad2(ore)}:${pad2(minuti)}`;
+      activeOrarioCell.textContent = `${formattaValoreRuota(ore)}:${formattaValoreRuota(minuti)}`;
+
+      const oreVuota = ore === -1;
+      const minVuoto = minuti === -1;
+      if (oreVuota !== minVuoto) return; // solo una delle due su "--": stato intermedio, non salvare ancora
+
+      const valore = (oreVuota && minVuoto) ? '' : `${pad2(ore)}:${pad2(minuti)}`;
       const data = activeOrarioCell.dataset.data;
       const campo = activeOrarioCell.dataset.campo;
       if (!orarioMap[data]) orarioMap[data] = {};
       orarioMap[data][campo] = valore;
       salvaOrarioMap();
 
-      activeOrarioCell.textContent = valore;
-      activeOrarioCell.classList.remove('vuota');
+      activeOrarioCell.classList.toggle('vuota', valore === '');
     }
 
     function chiudiRuotaOverlay(e) {
