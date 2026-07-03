@@ -9,7 +9,7 @@
 
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #f2e9d8;
+      background: #f0dccb;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -575,7 +575,6 @@
       padding: 7px 2px;
     }
 
-    .tabella-orario tbody tr:nth-child(even) { background: #f7fafc; }
     .tabella-orario tbody tr.weekend { background: #fffaf0; }
 
     .cella-data { font-weight: 600; color: #4a5568; font-size: 0.66rem; }
@@ -1397,7 +1396,7 @@
           <tr class="${r.weekend ? 'weekend' : ''}">
             <td class="cella-data">${dataFmt}</td>
             ${celle}
-            <td class="cella-totale${minTot > 0 ? '' : ' vuota'}">${totaleTxt}</td>
+            <td class="cella-totale${(minTot > 0 || totaleTxt === '/') ? '' : ' vuota'}">${totaleTxt}</td>
           </tr>`;
       }).join('');
 
