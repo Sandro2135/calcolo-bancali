@@ -583,6 +583,11 @@
     .cella-orario.vuota { color: #cbd5e0; font-weight: 400; }
     .cella-orario.t-active { background: #bee3f8 !important; }
 
+    .cella-orario.codice-P { color: #2b6cb0; font-weight: 700; }
+    .cella-orario.codice-F { color: #276749; font-weight: 700; }
+    .cella-orario.codice-M { color: #c53030; font-weight: 700; }
+    .cella-orario.codice-assenza { color: #718096; font-weight: 700; }
+
     .cella-totale { font-weight: 700; color: #276749; }
     .cella-totale.vuota { color: #cbd5e0; font-weight: 400; }
 
@@ -637,6 +642,37 @@
     .ruota-item.selezionato { color: #1a202c; font-weight: 700; }
 
     .ruota-separatore { font-size: 1.4rem; font-weight: 700; color: #1a202c; margin: 0 6px; z-index: 1; }
+
+    .codici-speciali-label {
+      text-align: center;
+      font-size: 0.72rem;
+      color: #718096;
+      margin-bottom: 8px;
+    }
+
+    .codici-speciali {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .codice-btn {
+      padding: 12px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      background: #f7fafc;
+      color: #1a202c;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      margin-top: 0;
+      width: auto;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .codice-btn:active { background: #edf2f7; }
+    .codice-btn-assenza { color: #718096; }
   </style>
 </head>
 <body>
@@ -825,6 +861,13 @@
         <div class="ruota-col" id="ruota-ore"></div>
         <div class="ruota-separatore">:</div>
         <div class="ruota-col" id="ruota-minuti"></div>
+      </div>
+      <div class="codici-speciali-label">oppure segna l'intero turno come</div>
+      <div class="codici-speciali">
+        <button class="codice-btn" onclick="impostaCodiceTurno('P')">P</button>
+        <button class="codice-btn" onclick="impostaCodiceTurno('F')">F</button>
+        <button class="codice-btn" onclick="impostaCodiceTurno('M')">M</button>
+        <button class="codice-btn codice-btn-assenza" onclick="impostaCodiceTurno('/')">/</button>
       </div>
       <button class="btn-avanti" id="btn-avanti-ruota" onclick="ruotaAvanti()" style="width:100%; margin-bottom:8px;">→ Avanti</button>
       <button class="btn-fatto" onclick="chiudiRuota()">Fatto</button>
@@ -1222,6 +1265,10 @@
     const MESI = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
     const CAMPI_ORARIO = ['e1', 'u1', 'e2', 'u2'];
     const CAMPO_SUCCESSIVO = { e1: 'u1', u1: 'e2', e2: 'u2' };
+    const CODICI_SPECIALI = ['P', 'F', 'M', '/'];
+    const TURNO_DEL_CAMPO = { e1: 'e1', u1: 'e1', e2: 'e2', u2: 'e2' };
+    const CAMPI_TURNO = { e1: ['e1', 'u1'], e2: ['e2', 'u2'] };
+    const TURNO_SUCCESSIVO = { e1: 'e2', e2: null };
 
     const oggiOrario = new Date();
     let orarioMeseCorrente = oggiOrario.getMonth();
@@ -1259,7 +1306,17 @@
 
     function minutiGiorno(g) {
       if (!g) return 0;
-      return minutiTurno(g.e1, g.u1) + minutiTurno(g.e2, g.u2);
+      let minuti = 0;
+      let completa = false;
+      [['e1', 'u1'], ['e2', 'u2']].forEach(([ce, cu]) => {
+        const val = g[ce];
+        if (CODICI_SPECIALI.includes(val)) {
+          if (val !== '/') completa = true; // P/F/M completano sempre a 6h, l'assenza "/" no
+        } else {
+          minuti += minutiTurno(val, g[cu]);
+        }
+      });
+      return completa ? Math.max(minuti, 360) : minuti;
     }
 
     function formattaMinuti(min) {
@@ -1321,7 +1378,10 @@
         const totaleTxt = minTot > 0 ? formattaMinuti(minTot) : '—';
         const celle = CAMPI_ORARIO.map(campo => {
           const val = r.g[campo] || '';
-          return `<td class="cella-orario${val ? '' : ' vuota'}" data-data="${r.data}" data-campo="${campo}">${val || '--:--'}</td>`;
+          let classi = 'cella-orario';
+          if (!val) classi += ' vuota';
+          else if (CODICI_SPECIALI.includes(val)) classi += ` codice-${val === '/' ? 'assenza' : val}`;
+          return `<td class="${classi}" data-data="${r.data}" data-campo="${campo}">${val || '--:--'}</td>`;
         }).join('');
         return `
           <tr class="${r.weekend ? 'weekend' : ''}">
@@ -1348,9 +1408,13 @@
       const data = cella.dataset.data;
       const campo = cella.dataset.campo;
       const valoreSalvato = (orarioMap[data] && orarioMap[data][campo]) || '';
+      const eraCodiceSpeciale = CODICI_SPECIALI.includes(valoreSalvato);
 
       let oreIniziali, minIniziali;
-      if (valoreSalvato) {
+      if (eraCodiceSpeciale) {
+        oreIniziali = -1;
+        minIniziali = -1;
+      } else if (valoreSalvato) {
         const [h, m] = valoreSalvato.split(':').map(Number);
         oreIniziali = h;
         minIniziali = Math.round(m / 15) * 15;
@@ -1365,7 +1429,13 @@
       costruisciRuota(document.getElementById('ruota-ore'), [-1, ...Array.from({ length: 24 }, (_, i) => i)], oreIniziali, v => salvaCellaRuota(v, null));
       costruisciRuota(document.getElementById('ruota-minuti'), [-1, 0, 15, 30, 45], minIniziali, v => salvaCellaRuota(null, v));
 
-      salvaCellaRuota(oreIniziali, minIniziali);
+      if (eraCodiceSpeciale) {
+        // non salvare subito: manteniamo il codice esistente finché l'utente non tocca la rotella o i pulsanti
+        activeOrarioCell.dataset.oreTmp = oreIniziali;
+        activeOrarioCell.dataset.minTmp = minIniziali;
+      } else {
+        salvaCellaRuota(oreIniziali, minIniziali);
+      }
       document.getElementById('ruota-overlay').classList.add('visible');
     }
 
@@ -1420,7 +1490,39 @@
       orarioMap[data][campo] = valore;
       salvaOrarioMap();
 
+      activeOrarioCell.classList.remove('codice-P', 'codice-F', 'codice-M', 'codice-assenza');
       activeOrarioCell.classList.toggle('vuota', valore === '');
+    }
+
+    function impostaCodiceTurno(codice) {
+      if (!activeOrarioCell) return;
+      const data = activeOrarioCell.dataset.data;
+      const campo = activeOrarioCell.dataset.campo;
+      const turno = TURNO_DEL_CAMPO[campo];
+      const [campoE, campoU] = CAMPI_TURNO[turno];
+
+      if (!orarioMap[data]) orarioMap[data] = {};
+      orarioMap[data][campoE] = codice;
+      orarioMap[data][campoU] = codice;
+      salvaOrarioMap();
+
+      const classeCodice = `codice-${codice === '/' ? 'assenza' : codice}`;
+      [campoE, campoU].forEach(c => {
+        const el = document.querySelector(`.cella-orario[data-data="${data}"][data-campo="${c}"]`);
+        if (el) {
+          el.textContent = codice;
+          el.classList.remove('vuota', 'codice-P', 'codice-F', 'codice-M', 'codice-assenza');
+          el.classList.add(classeCodice);
+        }
+      });
+
+      const prossimoTurno = TURNO_SUCCESSIVO[turno];
+      if (prossimoTurno) {
+        const [campoEProssimo] = CAMPI_TURNO[prossimoTurno];
+        const prossimaCella = document.querySelector(`.cella-orario[data-data="${data}"][data-campo="${campoEProssimo}"]`);
+        if (prossimaCella) { apriRuotaOrario(prossimaCella); return; }
+      }
+      chiudiRuota();
     }
 
     function chiudiRuotaOverlay(e) {
