@@ -22,18 +22,32 @@ App browser con due funzioni: **Rettifiche** (calcolo volume di colli/spedizioni
 5. Aspetta 1-2 minuti → GitHub Pages si aggiorna
 6. Su iPhone Safari: tieni premuto 🔄 → "Ricarica senza contenuto della cache" se non vedi le modifiche
 
+**Nota — il deploy di GitHub Pages a volte fallisce silenziosamente:** il workflow "pages build and deployment" può concludersi con `conclusion: failure` e il messaggio generico "Deployment failed, try again later", senza che ci sia nulla di sbagliato nel codice pushato (è capitato anche con un commit di solo testo). Se dopo qualche minuto il sito non mostra le modifiche, non è detto sia colpa della cache del telefono: verificare lo stato dell'ultima build su `https://api.github.com/repos/Sandro2135/calcolo-bancali/actions/runs?per_page=1` (campo `conclusion`) prima di dare per scontato un problema di cache. Se `failure`, rilanciare con un commit vuoto: `git commit --allow-empty -m "retry deploy" && git push`.
+
 ## Funzionalità
 
 ### Home
 - Prima schermata all'apertura dell'app: due tasti grandi, centrati verticalmente nello schermo
-  - **Rettifiche** (verde scuro `#276749`) → apre il menu Spedizione singola/multipla
-  - **Orario** (blu `#2b6cb0`) → apre la tabella oraria mensile
+  - **Rettifiche** (marrone scuro `#5c3a1e`) → apre il menu Spedizione singola/multipla
+  - **Orario** (verde-petrolio `#3d6b5c`) → apre la tabella oraria mensile
 - Tasto "‹ Home" in alto in entrambe le sezioni per tornare alla home
-- Sfondo app: `#f0dccb` (beige/terracotta chiaro)
+
+### Tema visivo "bacheca in sughero"
+- Sfondo app: foto reale di sughero (`sfondo2.jpg`, in repo accanto a `index.html`), `background-size: cover`, `background-attachment: fixed` (su iOS Safari l'attachment fixed non è supportato e scorre normalmente con la pagina — comportamento accettato, non un bug)
+- I pannelli bianchi (`.container` di Rettifiche/Orario, e i `.modal` di Storico/Aggiungi colli multipli) sono trattati come **fogli di carta pinnati sulla bacheca**:
+  - Colore pergamena calda (`#f7f0e0`) con una texture a grana sottile (SVG `feTurbulence` inline in data-URI, non un file esterno)
+  - Leggermente ruotati (`transform: rotate(-0.4/-0.5deg)`), bordi poco arrotondati (`border-radius: 4px`)
+  - Ombra morbida e calda (marrone scuro invece di nero puro) per sembrare appoggiati con luce ambiente
+  - **Puntina rossa** in cima (`::before`, cerchio ~22px con riflesso lucido bianco e bordi in ombra/luce per un effetto 3D) + **ombra proiettata** (`::after`, ellisse sfumata leggermente spostata, per dare l'idea che la puntina sia sollevata dal foglio)
+- **Palette colori unificata** (sostituisce i colori vivaci "web" originali con toni caldi legno/terracotta):
+  - Rettifiche: marrone scuro `#5c3a1e` (attivo/primario), marrone medio `#8b5e34` (pulsanti/hover `#74491f`), terracotta `#a94442` (azzera/rimuovi/errori, hover `#8c3735`), senape `#a8790a` (storico, hover `#8a6408`), crema-tan `#f3e6d0`/`#8a5a2e`/`#c9a876` (accenti "aggiungi", risultati, badge storico)
+  - Orario: verde-petrolio `#3d6b5c` (identità propria: intestazione tabella, rotella, Plus/minus, mese-nav, codice P), oliva `#6b7f4f` (positivo/ferie F), terracotta `#a94442` (negativo/malattia M, condiviso con Rettifiche)
+- **Se si vuole cambiare la foto di sfondo**: sostituire `sfondo2.jpg` con un altro file (stesso nome o aggiornare il riferimento in CSS `background-image: url("sfondo2.jpg")` nel selettore `body`); ottimizzare prima le foto (le tre foto originali fornite dall'utente erano PNG da 2.5-3.3MB, ridotte con PowerShell/System.Drawing a JPEG ~300KB, 700px di larghezza)
 
 ### Menu (dentro Rettifiche)
 - Due sezioni: **Spedizione singola** e **Spedizione multipla**
-- Tasto attivo: verde scuro `#276749`
+- Il menu si trova **sotto** il foglio (container), non sopra: prima vedi il foglio con la puntina, poi i tasti di scelta sezione
+- Tasto attivo: marrone scuro `#5c3a1e`
 
 ### Spedizione singola
 - Selezione fattore P/V a tendina: 300, 250, 200, 167, 150, 100
@@ -108,20 +122,22 @@ App browser con due funzioni: **Rettifiche** (calcolo volume di colli/spedizioni
 // valori possibili: 'HH:MM', '' (vuoto), oppure uno dei codici speciali 'P' 'F' 'M' '/'
 ```
 
-## Stile tasti
+## Stile tasti (palette legno/terracotta, aggiornata)
 
 | Tasto | Colore sfondo | Testo | Hover |
 |---|---|---|---|
-| Calcola PV | `#48bb78` verde | bianco | `#38a169` |
-| Azzera | `#e53e3e` rosso | bianco | `#c53030` |
-| Storico | `#c8960c` giallo | bianco | `#a87a08` |
-| + Aggiungi collo / moltiplica | `#ebf8ff` + bordo `#4299e1` | `#2b6cb0` | `#bee3f8` |
-| Cancella tutto (storico) | `#e53e3e` rosso | bianco | `#c53030` |
-| Rimuovi (lista colli) | `#e53e3e` rosso | bianco | `#c53030` |
-| Tastiera ⌫ | `#e53e3e` rosso | bianco | — |
-| Tastiera → | `#ebf8ff` + bordo `#4299e1` | `#2b6cb0` | — |
-| Tastiera Fatto | `#48bb78` verde | bianco | `#38a169` |
-| Menu attivo | `#276749` verde scuro | bianco | — |
+| Calcola PV | `#8b5e34` marrone | bianco | `#74491f` |
+| Azzera | `#a94442` terracotta | bianco | `#8c3735` |
+| Storico | `#a8790a` senape | bianco | `#8a6408` |
+| + Aggiungi collo / moltiplica | `#f3e6d0` + bordo `#c9a876` | `#8a5a2e` | `#ead9bd` |
+| Cancella tutto (storico) | `#a94442` terracotta | bianco | `#8c3735` |
+| Rimuovi (lista colli) | `#a94442` terracotta | bianco | `#8c3735` |
+| Tastiera ⌫ | `#a94442` terracotta | bianco | — |
+| Tastiera → | `#f3e6d0` + bordo `#c9a876` | `#8a5a2e` | — |
+| Tastiera Fatto | `#8b5e34` marrone | bianco | `#74491f` |
+| Menu attivo | `#5c3a1e` marrone scuro | bianco | — |
+| Home Rettifiche | `#5c3a1e` marrone scuro | bianco | — |
+| Home Orario / identità Orario | `#3d6b5c` verde-petrolio | bianco | `#c9ded7` |
 
 ## Fix iOS applicati
 
