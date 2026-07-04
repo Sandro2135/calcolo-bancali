@@ -26,7 +26,7 @@
     .menu {
       display: flex;
       gap: 8px;
-      margin-bottom: 12px;
+      margin-top: 16px;
       width: 100%;
       max-width: 480px;
     }
@@ -67,26 +67,32 @@
     .container::before {
       content: '';
       position: absolute;
-      top: -11px;
+      top: -13px;
       left: 50%;
       transform: translateX(-50%);
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #ff7a7a, #b91c1c 75%);
-      box-shadow: 0 3px 4px rgba(0,0,0,0.45);
+      background:
+        radial-gradient(circle at 32% 26%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 20%),
+        radial-gradient(circle at 40% 38%, #ff8a8a 0%, #d32f2f 55%, #7a1414 100%);
+      box-shadow:
+        inset -2px -2px 3px rgba(0,0,0,0.4),
+        inset 1px 1px 2px rgba(255,255,255,0.6),
+        0 5px 7px rgba(0,0,0,0.5);
       z-index: 2;
     }
 
     .container::after {
       content: '';
       position: absolute;
-      top: -3px;
-      left: 50%;
+      top: 3px;
+      left: calc(50% + 4px);
       transform: translateX(-50%);
-      width: 26px;
-      height: 8px;
-      background: radial-gradient(ellipse at center, rgba(30,18,8,0.35) 0%, transparent 70%);
+      width: 24px;
+      height: 11px;
+      background: radial-gradient(ellipse at center, rgba(20,12,6,0.42) 0%, transparent 75%);
+      filter: blur(1px);
       z-index: 1;
     }
 
@@ -272,26 +278,32 @@
     .modal::before {
       content: '';
       position: absolute;
-      top: -11px;
+      top: -13px;
       left: 50%;
       transform: translateX(-50%);
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #ff7a7a, #b91c1c 75%);
-      box-shadow: 0 3px 4px rgba(0,0,0,0.45);
+      background:
+        radial-gradient(circle at 32% 26%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 20%),
+        radial-gradient(circle at 40% 38%, #ff8a8a 0%, #d32f2f 55%, #7a1414 100%);
+      box-shadow:
+        inset -2px -2px 3px rgba(0,0,0,0.4),
+        inset 1px 1px 2px rgba(255,255,255,0.6),
+        0 5px 7px rgba(0,0,0,0.5);
       z-index: 2;
     }
 
     .modal::after {
       content: '';
       position: absolute;
-      top: -3px;
-      left: 50%;
+      top: 3px;
+      left: calc(50% + 4px);
       transform: translateX(-50%);
-      width: 26px;
-      height: 8px;
-      background: radial-gradient(ellipse at center, rgba(30,18,8,0.35) 0%, transparent 70%);
+      width: 24px;
+      height: 11px;
+      background: radial-gradient(ellipse at center, rgba(20,12,6,0.42) 0%, transparent 75%);
+      filter: blur(1px);
       z-index: 1;
     }
 
@@ -761,12 +773,6 @@
   <div class="app-screen" id="app-rettifiche">
     <button class="back-btn" onclick="tornaHome()">‹ Home</button>
 
-    <!-- MENU -->
-    <div class="menu">
-      <button class="menu-btn active" onclick="cambiaSezione('singolo', this)">Spedizione singola</button>
-      <button class="menu-btn" onclick="cambiaSezione('multiplo', this)">Spedizione multipla</button>
-    </div>
-
     <!-- SEZIONE SINGOLO -->
   <div class="section active" id="sezione-singolo">
     <div class="container">
@@ -873,6 +879,12 @@
       </div>
     </div>
   </div>
+
+    <!-- MENU -->
+    <div class="menu">
+      <button class="menu-btn active" onclick="cambiaSezione('singolo', this)">Spedizione singola</button>
+      <button class="menu-btn" onclick="cambiaSezione('multiplo', this)">Spedizione multipla</button>
+    </div>
   </div>
 
   <!-- APP ORARIO -->
