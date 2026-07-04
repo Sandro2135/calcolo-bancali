@@ -9,7 +9,12 @@
 
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #f0dccb;
+      background-color: #b5875a;
+      background-image: url("sfondo2.jpg");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -40,19 +45,49 @@
       margin-top: 0;
     }
 
-    .menu-btn.active { background: #276749; border-color: #276749; color: white; }
-    .menu-btn:hover:not(.active) { border-color: #276749; color: #276749; }
+    .menu-btn.active { background: #5c3a1e; border-color: #5c3a1e; color: white; }
+    .menu-btn:hover:not(.active) { border-color: #5c3a1e; color: #5c3a1e; }
 
     /* SEZIONI */
     .section { display: none; width: 100%; max-width: 480px; }
     .section.active { display: block; }
 
     .container {
-      background: white;
-      border-radius: 14px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      position: relative;
+      background-color: #f7f0e0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.5  0 0 0 0 0.38  0 0 0 0 0.2  0.18 0.18 0.18 0 0'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>");
+      border-radius: 4px;
+      box-shadow: 0 10px 26px rgba(50,32,16,0.4), 0 3px 8px rgba(50,32,16,0.22);
       padding: 20px;
       margin-bottom: 0;
+      margin-top: 14px;
+      transform: rotate(-0.5deg);
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ff7a7a, #b91c1c 75%);
+      box-shadow: 0 3px 4px rgba(0,0,0,0.45);
+      z-index: 2;
+    }
+
+    .container::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 26px;
+      height: 8px;
+      background: radial-gradient(ellipse at center, rgba(30,18,8,0.35) 0%, transparent 70%);
+      z-index: 1;
     }
 
     h1 { font-size: 1.2rem; color: #1a202c; margin-bottom: 4px; }
@@ -83,7 +118,7 @@
       background: white;
     }
 
-    input[type="number"]:focus, select:focus { border-color: #4299e1; }
+    input[type="number"]:focus, select:focus { border-color: #8b5e34; }
 
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -94,7 +129,7 @@
     button {
       width: 100%;
       padding: 11px;
-      background: #48bb78;
+      background: #8b5e34;
       color: white;
       border: none;
       border-radius: 8px;
@@ -105,31 +140,31 @@
       transition: background 0.2s;
     }
 
-    button:hover { background: #38a169; }
+    button:hover { background: #74491f; }
 
     .reset-btn {
-      background: #e53e3e;
+      background: #a94442;
       color: white;
       border: none;
       margin-top: 8px;
     }
 
-    .reset-btn:hover { background: #c53030; }
+    .reset-btn:hover { background: #8c3735; }
 
     .storico-open-btn {
-      background: #c8960c;
+      background: #a8790a;
       color: white;
       border: none;
       margin-top: 8px;
       font-size: 0.85rem;
     }
 
-    .storico-open-btn:hover { background: #a87a08; }
+    .storico-open-btn:hover { background: #8a6408; }
 
     .result {
       margin-top: 16px;
       padding: 16px;
-      background: #ebf8ff;
+      background: #f3e6d0;
       border-radius: 10px;
       text-align: center;
       display: none;
@@ -139,22 +174,22 @@
 
     .result-label {
       font-size: 0.78rem;
-      color: #2b6cb0;
+      color: #8a5a2e;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       margin-bottom: 4px;
     }
 
-    .result-value { font-size: 2rem; font-weight: 700; color: #2b6cb0; }
+    .result-value { font-size: 2rem; font-weight: 700; color: #8a5a2e; }
 
     .error {
       margin-top: 10px;
       padding: 9px 12px;
-      background: #fff5f5;
-      border-left: 4px solid #fc8181;
+      background: #fbe9e4;
+      border-left: 4px solid #cf8f78;
       border-radius: 6px;
-      color: #c53030;
+      color: #a94442;
       font-size: 0.82rem;
       display: none;
     }
@@ -172,8 +207,8 @@
     .xyz-row .field { margin-bottom: 0; }
 
     /* AGGIUNGI COLLO (multiplo) */
-    .add-btn { background: #ebf8ff; color: #2b6cb0; border: 2px solid #4299e1; margin-top: 0; }
-    .add-btn:hover { background: #bee3f8; }
+    .add-btn { background: #f3e6d0; color: #8a5a2e; border: 2px solid #c9a876; margin-top: 0; }
+    .add-btn:hover { background: #ead9bd; }
 
     .bancali-list { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
 
@@ -186,23 +221,23 @@
       padding: 8px 12px;
       font-size: 0.82rem;
       color: #4a5568;
-      border-left: 4px solid #48bb78;
+      border-left: 4px solid #8b5e34;
     }
 
-    .bancale-item .bi-num { font-weight: 700; color: #2f855a; margin-right: 6px; }
+    .bancale-item .bi-num { font-weight: 700; color: #6b4423; margin-right: 6px; }
 
     .bancale-item .remove-btn {
       width: auto;
       padding: 3px 8px;
       font-size: 0.72rem;
-      background: #e53e3e;
+      background: #a94442;
       color: white;
       border: none;
       border-radius: 5px;
       margin-top: 0;
     }
 
-    .bancale-item .remove-btn:hover { background: #c53030; }
+    .bancale-item .remove-btn:hover { background: #8c3735; }
 
     .bancali-empty { color: #a0aec0; font-size: 0.82rem; text-align: center; padding: 12px 0; }
 
@@ -221,14 +256,43 @@
     .modal-overlay.visible { display: flex; }
 
     .modal {
-      background: white;
-      border-radius: 14px;
+      position: relative;
+      background-color: #f7f0e0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.5  0 0 0 0 0.38  0 0 0 0 0.2  0.18 0.18 0.18 0 0'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>");
+      border-radius: 4px;
       width: 100%;
       max-width: 480px;
       max-height: 80vh;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+      box-shadow: 0 10px 30px rgba(50,32,16,0.4), 0 3px 8px rgba(50,32,16,0.22);
+      transform: rotate(-0.4deg);
+    }
+
+    .modal::before {
+      content: '';
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ff7a7a, #b91c1c 75%);
+      box-shadow: 0 3px 4px rgba(0,0,0,0.45);
+      z-index: 2;
+    }
+
+    .modal::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 26px;
+      height: 8px;
+      background: radial-gradient(ellipse at center, rgba(30,18,8,0.35) 0%, transparent 70%);
+      z-index: 1;
     }
 
     .modal-header {
@@ -266,14 +330,14 @@
       width: auto;
       padding: 5px 12px;
       font-size: 0.78rem;
-      background: #e53e3e;
+      background: #a94442;
       color: white;
       border: none;
       border-radius: 6px;
       margin-top: 0;
     }
 
-    .clear-btn:hover { background: #c53030; }
+    .clear-btn:hover { background: #8c3735; }
 
     .modal-scroll {
       flex: 1;
@@ -291,10 +355,10 @@
       padding: 12px 14px;
       font-size: 0.88rem;
       color: #4a5568;
-      border-left: 4px solid #4299e1;
+      border-left: 4px solid #c9a876;
     }
 
-    .history-item.multi { border-left-color: #48bb78; }
+    .history-item.multi { border-left-color: #8b5e34; }
 
     .history-item .hi-badge {
       display: inline-block;
@@ -304,14 +368,14 @@
       padding: 2px 6px;
       border-radius: 4px;
       margin-bottom: 5px;
-      background: #ebf8ff;
-      color: #2b6cb0;
+      background: #f3e6d0;
+      color: #8a5a2e;
     }
 
-    .history-item.multi .hi-badge { background: #f0fff4; color: #276749; }
+    .history-item.multi .hi-badge { background: #eef0e2; color: #6b7f4f; }
 
-    .history-item .hi-result { font-size: 1.1rem; font-weight: 700; color: #2b6cb0; margin-bottom: 3px; }
-    .history-item.multi .hi-result { color: #276749; }
+    .history-item .hi-result { font-size: 1.1rem; font-weight: 700; color: #8a5a2e; margin-bottom: 3px; }
+    .history-item.multi .hi-result { color: #6b7f4f; }
 
     .history-item .hi-details { font-size: 0.76rem; color: #718096; margin-top: 3px; }
     .history-item .hi-time { font-size: 0.7rem; color: #a0aec0; margin-top: 2px; }
@@ -320,7 +384,7 @@
 
     .hi-details-drop summary {
       font-size: 0.76rem;
-      color: #276749;
+      color: #6b7f4f;
       font-weight: 600;
       cursor: pointer;
       user-select: none;
@@ -333,7 +397,7 @@
     .hi-spedizione {
       font-size: 0.74rem;
       color: #4a5568;
-      background: #f0fff4;
+      background: #eef0e2;
       border-radius: 5px;
       padding: 3px 7px;
     }
@@ -383,20 +447,20 @@
     .tastiera-grid button:active { background: #edf2f7; }
 
     .btn-del {
-      background: #e53e3e !important;
+      background: #a94442 !important;
       color: white !important;
-      border-color: #e53e3e !important;
+      border-color: #a94442 !important;
     }
 
-    .btn-del:active { background: #c53030 !important; }
+    .btn-del:active { background: #8c3735 !important; }
 
     .btn-avanti {
-      background: #ebf8ff !important;
-      color: #2b6cb0 !important;
-      border-color: #4299e1 !important;
+      background: #f3e6d0 !important;
+      color: #8a5a2e !important;
+      border-color: #c9a876 !important;
     }
 
-    .btn-avanti:active { background: #bee3f8 !important; }
+    .btn-avanti:active { background: #ead9bd !important; }
 
     #modal-moltiplica-overlay.tastiera-aperta {
       align-items: flex-start;
@@ -408,7 +472,7 @@
       padding: 14px;
       font-size: 1rem;
       font-weight: 700;
-      background: #48bb78;
+      background: #8b5e34;
       color: white;
       border: none;
       border-radius: 10px;
@@ -417,9 +481,9 @@
       touch-action: manipulation;
     }
 
-    .btn-fatto:hover { background: #38a169; }
+    .btn-fatto:hover { background: #74491f; }
 
-    input.t-active { border-color: #4299e1 !important; }
+    input.t-active { border-color: #8b5e34 !important; }
 
     /* BLOCCO ROTAZIONE ORIZZONTALE */
     .rotate-overlay {
@@ -481,8 +545,8 @@
 
     .home-btn:active { transform: scale(0.97); }
 
-    .home-btn-rettifiche { background: #276749; }
-    .home-btn-orario { background: #2b6cb0; }
+    .home-btn-rettifiche { background: #5c3a1e; }
+    .home-btn-orario { background: #3d6b5c; }
 
     .app-screen { display: none; width: 100%; max-width: 480px; }
     .app-screen.active { display: block; }
@@ -512,30 +576,30 @@
     .mese-nav button {
       width: auto;
       padding: 8px 14px;
-      background: #ebf8ff;
-      color: #2b6cb0;
-      border: 2px solid #4299e1;
+      background: #e3ede9;
+      color: #3d6b5c;
+      border: 2px solid #6b9686;
       border-radius: 8px;
       font-size: 1rem;
       margin-top: 0;
     }
 
-    .mese-nav button:hover { background: #bee3f8; }
+    .mese-nav button:hover { background: #c9ded7; }
 
     .mese-label { font-size: 1rem; font-weight: 700; color: #1a202c; text-transform: capitalize; }
 
     .riepilogo-mese {
-      background: #ebf8ff;
+      background: #e3ede9;
       border-radius: 10px;
       padding: 12px 16px;
       text-align: center;
       margin-bottom: 14px;
     }
 
-    .riepilogo-mese .rm-label { font-size: 0.74rem; color: #2b6cb0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-    .riepilogo-mese .rm-value { font-size: 1.6rem; font-weight: 700; color: #2b6cb0; }
-    .riepilogo-mese .rm-value.positivo { color: #276749; }
-    .riepilogo-mese .rm-value.negativo { color: #c53030; }
+    .riepilogo-mese .rm-label { font-size: 0.74rem; color: #3d6b5c; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .riepilogo-mese .rm-value { font-size: 1.6rem; font-weight: 700; color: #3d6b5c; }
+    .riepilogo-mese .rm-value.positivo { color: #6b7f4f; }
+    .riepilogo-mese .rm-value.negativo { color: #a94442; }
 
     .tabella-wrap {
       overflow-y: auto;
@@ -566,7 +630,7 @@
     .tabella-orario thead th {
       position: sticky;
       top: 0;
-      background: #276749;
+      background: #3d6b5c;
       color: white;
       font-size: 0.64rem;
       font-weight: 700;
@@ -575,20 +639,20 @@
       padding: 7px 2px;
     }
 
-    .tabella-orario tbody tr.weekend { background: #fffaf0; }
+    .tabella-orario tbody tr.weekend { background: #f0e2c8; }
 
     .cella-data { font-weight: 600; color: #4a5568; font-size: 0.66rem; }
 
-    .cella-orario { color: #2b6cb0; font-weight: 600; cursor: pointer; touch-action: manipulation; }
+    .cella-orario { color: #3d6b5c; font-weight: 600; cursor: pointer; touch-action: manipulation; }
     .cella-orario.vuota { color: #cbd5e0; font-weight: 400; }
-    .cella-orario.t-active { background: #bee3f8 !important; }
+    .cella-orario.t-active { background: #c9ded7 !important; }
 
-    .cella-orario.codice-P { color: #2b6cb0; font-weight: 700; }
-    .cella-orario.codice-F { color: #276749; font-weight: 700; }
-    .cella-orario.codice-M { color: #c53030; font-weight: 700; }
+    .cella-orario.codice-P { color: #3d6b5c; font-weight: 700; }
+    .cella-orario.codice-F { color: #6b7f4f; font-weight: 700; }
+    .cella-orario.codice-M { color: #a94442; font-weight: 700; }
     .cella-orario.codice-assenza { color: #718096; font-weight: 700; }
 
-    .cella-totale { font-weight: 700; color: #276749; }
+    .cella-totale { font-weight: 700; color: #6b7f4f; }
     .cella-totale.vuota { color: #cbd5e0; font-weight: 400; }
 
     /* RUOTA ORARIO (stile selettore sveglia iPhone) */
@@ -609,7 +673,7 @@
       right: 20px;
       height: 40px;
       transform: translateY(-50%);
-      background: #ebf8ff;
+      background: #e3ede9;
       border-radius: 8px;
       pointer-events: none;
       z-index: 0;
