@@ -22,32 +22,51 @@ App browser con due funzioni: **Rettifiche** (calcolo volume di colli/spedizioni
 5. Aspetta 1-2 minuti → GitHub Pages si aggiorna
 6. Su iPhone Safari: tieni premuto 🔄 → "Ricarica senza contenuto della cache" se non vedi le modifiche
 
-**Nota — il deploy di GitHub Pages a volte fallisce silenziosamente:** il workflow "pages build and deployment" può concludersi con `conclusion: failure` e il messaggio generico "Deployment failed, try again later", senza che ci sia nulla di sbagliato nel codice pushato (è capitato anche con un commit di solo testo). Se dopo qualche minuto il sito non mostra le modifiche, non è detto sia colpa della cache del telefono: verificare lo stato dell'ultima build su `https://api.github.com/repos/Sandro2135/calcolo-bancali/actions/runs?per_page=1` (campo `conclusion`) prima di dare per scontato un problema di cache. Se `failure`, rilanciare con un commit vuoto: `git commit --allow-empty -m "retry deploy" && git push`.
+**Nota — il deploy di GitHub Pages a volte fallisce silenziosamente o resta a lungo `queued`:** il workflow "pages build and deployment" può concludersi con `conclusion: failure` e il messaggio generico "Deployment failed, try again later", senza che ci sia nulla di sbagliato nel codice pushato (è capitato anche con un commit di solo testo), oppure restare in coda per diversi minuti prima di partire. Se dopo qualche minuto il sito non mostra le modifiche, non è detto sia colpa della cache del telefono: verificare lo stato dell'ultima build su `https://api.github.com/repos/Sandro2135/calcolo-bancali/actions/runs?per_page=1` (campi `status`/`conclusion`, e `head_sha` per verificare che sia la build del commit giusto) prima di dare per scontato un problema di cache. Se `failure`, rilanciare con un commit vuoto: `git commit --allow-empty -m "retry deploy" && git push`.
+
+**Nota — bug CSS visibili solo su iPhone Safari, non riproducibili su browser desktop:** alcuni bug (vedi "Fix iOS applicati" sotto, caso `.menu-btn`) si manifestano solo sul dispositivo reale. In questi casi non è possibile verificare in locale: si pubblica, si fa testare all'utente sul telefono, e si itera. Se un componente sembra "vinto" da uno stile generico solo su iOS pur avendo CSS più specifico che dovrebbe prevalere per specificità, la soluzione più affidabile è forzare le proprietà critiche con `!important` invece di affidarsi alla sola specificità dei selettori.
 
 ## Funzionalità
 
 ### Home
 - Prima schermata all'apertura dell'app: due tasti grandi, centrati verticalmente nello schermo
-  - **Rettifiche** (marrone scuro `#5c3a1e`) → apre il menu Spedizione singola/multipla
-  - **Orario** (verde-petrolio `#3d6b5c`) → apre la tabella oraria mensile
+  - **Rettifiche** → apre il menu Spedizione singola/multipla
+  - **Orario** → apre la tabella oraria mensile
 - Tasto "‹ Home" in alto in entrambe le sezioni per tornare alla home
 
-### Tema visivo "bacheca in sughero"
-- Sfondo app: foto reale di sughero (`sfondo2.jpg`, in repo accanto a `index.html`), `background-size: cover`, `background-attachment: fixed` (su iOS Safari l'attachment fixed non è supportato e scorre normalmente con la pagina — comportamento accettato, non un bug)
-- I pannelli bianchi (`.container` di Rettifiche/Orario, e i `.modal` di Storico/Aggiungi colli multipli) sono trattati come **fogli di carta pinnati sulla bacheca**:
-  - Colore pergamena calda (`#f7f0e0`) con una texture a grana sottile (SVG `feTurbulence` inline in data-URI, non un file esterno)
-  - Leggermente ruotati (`transform: rotate(-0.4/-0.5deg)`), bordi poco arrotondati (`border-radius: 4px`)
-  - Ombra morbida e calda (marrone scuro invece di nero puro) per sembrare appoggiati con luce ambiente
-  - **Puntina rossa** in cima (`::before`, cerchio ~22px con riflesso lucido bianco e bordi in ombra/luce per un effetto 3D) + **ombra proiettata** (`::after`, ellisse sfumata leggermente spostata, per dare l'idea che la puntina sia sollevata dal foglio)
-- **Palette colori unificata** (sostituisce i colori vivaci "web" originali con toni caldi legno/terracotta):
-  - Rettifiche: marrone scuro `#5c3a1e` (attivo/primario), marrone medio `#8b5e34` (pulsanti/hover `#74491f`), terracotta `#a94442` (azzera/rimuovi/errori, hover `#8c3735`), senape `#a8790a` (storico, hover `#8a6408`), crema-tan `#f3e6d0`/`#8a5a2e`/`#c9a876` (accenti "aggiungi", risultati, badge storico)
-  - Orario: verde-petrolio `#3d6b5c` (identità propria: intestazione tabella, rotella, Plus/minus, mese-nav, codice P), oliva `#6b7f4f` (positivo/ferie F), terracotta `#a94442` (negativo/malattia M, condiviso con Rettifiche)
-- **Se si vuole cambiare la foto di sfondo**: sostituire `sfondo2.jpg` con un altro file (stesso nome o aggiornare il riferimento in CSS `background-image: url("sfondo2.jpg")` nel selettore `body`); ottimizzare prima le foto (le tre foto originali fornite dall'utente erano PNG da 2.5-3.3MB, ridotte con PowerShell/System.Drawing a JPEG ~300KB, 700px di larghezza)
+### Tema visivo: "Neumorphism verde" (design moderno, attivo)
+Il vecchio tema "bacheca in sughero" (foto sfondo, puntine, fogli di carta ruotati) è stato **completamente rimosso** su richiesta esplicita dell'utente ("redesign completo, tema moderno, essenziale"). Prima di arrivare al tema attuale sono stati provati e scartati (mai pubblicati, solo test locali con `git checkout` per tornare indietro):
+1. Tema flat minimal stile iOS/Apple (sfondo grigio `#F2F2F7`, card bianche con bordo sottile, accento blu `#007AFF`) — pubblicato per primo, poi sostituito
+2. Glassmorphism verde (pannelli semi-trasparenti con `backdrop-filter: blur()`, sfondo a macchie sfumate colorate) — solo locale
+3. Neumorphism ambra (base crema, ombre doppie soft-UI, accento arancione/ambra) — solo locale, poi ricolorato in verde su richiesta
+
+**Tema attuale (pubblicato):** Neumorphism con base crema e accento verde. Caratteristiche:
+- Sfondo app e superficie di card/pulsanti tutti dello **stesso colore base** (`--base: #f1eee7`, crema caldo) — niente foto, niente gradiente
+- Effetto "soft UI": ogni elemento sembra **estruso** (in rilievo, doppia ombra: chiara in alto-sinistra `rgba(255,255,255,0.85-0.9)` + scura calda in basso-destra `rgba(158,150,130,0.4-0.45)`) oppure **incassato/premuto** (stesse ombre ma `inset`), mai bordi netti
+- Campi di input e caselle "lette" (es. riepilogo Plus/minus, fascia di selezione della rotella) usano l'effetto incassato; card, pulsanti e pillole di navigazione usano l'effetto in rilievo
+- Bottoni primari e di navigazione hanno un leggero effetto "pressione" al tap (`:active` passa a ombra incassata)
+- **Non ci sono più bordi colorati/pushpin**: tutta la profondità viene dalle ombre, non da bordi o texture
+
+**Variabili colore principali (in `:root`):**
+| Variabile | Valore | Uso |
+|---|---|---|
+| `--base` / `--base-hover` | `#f1eee7` / `#e8e4da` | Sfondo pagina, sfondo di ogni superficie (card, pulsanti neutri) |
+| `--text` / `--text-secondary` / `--text-tertiary` | `#3d3a34` / `#8c8677` / `#b9b3a2` | Testo principale / secondario / placeholder-disabilitato |
+| `--amber` / `--amber-dark` / `--amber-tint` | `#22a559` / `#167a3f` / `#e2f3e6` | **Verde primario** — Rettifiche, pulsanti principali (Calcola PV, Storico, Aggiungi, ecc.). Nome variabile storico (era ambra prima del cambio colore), il valore ora è verde |
+| `--copper` / `--copper-dark` / `--copper-tint` | `#0d5c34` / `#0a4527` / `#dcece1` | **Verde scuro/forestale, identità di Orario** — intestazione tabella, rotella, Plus/minus, mese-nav, codice P |
+| `--red` / `--red-dark` / `--red-tint` | `#ef4444` / `#c62828` / `#fbe0e0` | Azioni distruttive (Azzera, Rimuovi, Cancella tutto), codice M (malattia) |
+| `--green-dark` | `#2f7d32` | Scostamento positivo in Orario, codice F (ferie) |
+
+**Ombre neumorfiche (in `:root`):** `--shadow-out`/`--shadow-out-sm` (in rilievo), `--shadow-in`/`--shadow-in-sm` (incassato), `--shadow-amber`/`--shadow-amber-in` (rilievo/incassato colorati verdi, per i pulsanti primari), `--shadow-red`/`--shadow-red-in` (idem in rosso, per i pulsanti distruttivi). Tutte a doppio tono (chiaro + scuro caldo).
+
+**Home:** i due tasti grandi (Rettifiche/Orario) sono card neutre in rilievo (`--shadow-out`) con testo colorato in grassetto (Rettifiche = `--amber-dark` verde, Orario = `--copper-dark` verde scuro) — niente riempimento colorato pieno, coerente con lo stile "soft UI" dove il colore vive nel testo/accenti, non nelle superfici.
+
+**Se si vuole cambiare ancora il colore d'accento:** basta modificare i valori esadecimali di `--amber`/`--amber-dark`/`--amber-tint` (primario) e `--copper`/`--copper-dark`/`--copper-tint` (identità Orario) in `:root`, più le rgba dentro `--shadow-amber`/`--shadow-amber-in` (che devono restare coerenti col nuovo colore per l'effetto ombra colorata dei pulsanti). Il file `sfondo2.jpg` del vecchio tema bacheca è ancora nel repo ma non più referenziato da nessun CSS — può essere eliminato in un futuro cleanup, non è urgente.
 
 ### Menu (dentro Rettifiche)
 - Due sezioni: **Spedizione singola** e **Spedizione multipla**
-- Il menu si trova **sotto** il foglio (container), non sopra: prima vedi il foglio con la puntina, poi i tasti di scelta sezione
-- Tasto attivo: marrone scuro `#5c3a1e`
+- Il menu si trova **sotto** il foglio (container), non sopra
+- Tasto attivo: sfondo crema con ombra incassata + testo verde scuro in grassetto (non riempimento verde pieno — vedi bug iOS in "Fix iOS applicati")
 
 ### Spedizione singola
 - Selezione fattore P/V a tendina: 300, 250, 200, 167, 150, 100
@@ -73,9 +92,9 @@ App browser con due funzioni: **Rettifiche** (calcolo volume di colli/spedizioni
 
 ### Tastiera numerica personalizzata (iOS)
 - Blocca la tastiera nativa iOS (input `readonly`)
-- Tastierino scorrevole dal basso
+- Tastierino scorrevole dal basso, stesso stile neumorfico (superficie crema, ombre in rilievo/incassate)
 - Layout: 1-9 + ⌫ + 0 + →
-- **→** (azzurro): X → Y → Z → chiude il tastierino (no loop)
+- **→** (verde tenue): X → Y → Z → chiude il tastierino (no loop)
 - **⌫** (rosso): cancella un carattere
 - **Fatto** (verde): chiude il tastierino
 - Il tasto → è nascosto nel popup "quanti colli" (un solo campo)
@@ -84,6 +103,7 @@ App browser con due funzioni: **Rettifiche** (calcolo volume di colli/spedizioni
 ### Orario
 - Tabella mensile "tipo Excel" con 6 colonne: **Data** (gg/mm/aa) | Entrata | Uscita | Entrata | Uscita | Totale
 - Una riga per **ogni giorno del mese** (anche weekend), non solo i giorni compilati
+- Intestazione tabella (Data/Entrata/Uscita/Totale) a `font-size: 0.56rem` — ridotta da `0.64rem` perché su schermo iPhone risultava troppo grande
 - Navigazione mese con frecce ‹ › sopra la tabella
 - **Riepilogo "Plus/minus"** in cima: scostamento tra ore lavorate nel mese e monte ore teorico (6h × giorni feriali lun-ven già trascorsi nel mese, tutto il mese se è passato, zero se è futuro)
   - Formato `+Xh Y'` / `-Xh Y'`; se sotto l'ora mostra solo i minuti (es. `+45'`)
@@ -100,7 +120,7 @@ App browser con due funzioni: **Rettifiche** (calcolo volume di colli/spedizioni
   - Per segnare un giorno intero, si imposta lo stesso codice su entrambi i turni
   - Reset: si toglie un codice riaprendo la rotella e mettendo "--" su ore e minuti
 - **Colonna Totale**: mostra `Xh Y'` (o solo `Y'` se sotto l'ora), oppure **"/"** per i giorni con assenza intera o weekend senza orari — ma **solo se il giorno è già passato o è oggi** (i weekend futuri restano "—"). Weekend con orari realmente lavorati mostrano le ore effettive, non "/"
-- Righe tabella tutte bianche (nessuna alternanza di colore)
+- Righe tabella tutte bianche/crema (nessuna alternanza di colore forte, solo un lieve tint verde sui weekend)
 - Key localStorage: `orario_giorni` — oggetto (non array) indicizzato per data
 
 ## Struttura dati localStorage
@@ -122,23 +142,6 @@ App browser con due funzioni: **Rettifiche** (calcolo volume di colli/spedizioni
 // valori possibili: 'HH:MM', '' (vuoto), oppure uno dei codici speciali 'P' 'F' 'M' '/'
 ```
 
-## Stile tasti (palette legno/terracotta, aggiornata)
-
-| Tasto | Colore sfondo | Testo | Hover |
-|---|---|---|---|
-| Calcola PV | `#8b5e34` marrone | bianco | `#74491f` |
-| Azzera | `#a94442` terracotta | bianco | `#8c3735` |
-| Storico | `#a8790a` senape | bianco | `#8a6408` |
-| + Aggiungi collo / moltiplica | `#f3e6d0` + bordo `#c9a876` | `#8a5a2e` | `#ead9bd` |
-| Cancella tutto (storico) | `#a94442` terracotta | bianco | `#8c3735` |
-| Rimuovi (lista colli) | `#a94442` terracotta | bianco | `#8c3735` |
-| Tastiera ⌫ | `#a94442` terracotta | bianco | — |
-| Tastiera → | `#f3e6d0` + bordo `#c9a876` | `#8a5a2e` | — |
-| Tastiera Fatto | `#8b5e34` marrone | bianco | `#74491f` |
-| Menu attivo | `#5c3a1e` marrone scuro | bianco | — |
-| Home Rettifiche | `#5c3a1e` marrone scuro | bianco | — |
-| Home Orario / identità Orario | `#3d6b5c` verde-petrolio | bianco | `#c9ded7` |
-
 ## Fix iOS applicati
 
 - `font-size: 16px` sugli input per evitare zoom automatico
@@ -146,3 +149,5 @@ App browser con due funzioni: **Rettifiche** (calcolo volume di colli/spedizioni
 - `touch-action: manipulation` sui tasti del tastierino per evitare zoom da doppio tap
 - `user-scalable=no, maximum-scale=1.0` nel viewport meta tag per disabilitare completamente il pinch-to-zoom
 - Overlay CSS fullscreen (z-index 9999, sfondo scuro) con icona e messaggio "Ruota il telefono in verticale" attivato da `@media screen and (orientation: landscape)` — nessun JS necessario
+- `button { -webkit-appearance: none; appearance: none; -webkit-tap-highlight-color: transparent; }` globale, per evitare che iOS applichi stili/tap-highlight nativi ai bottoni custom
+- **Bug risolto — tasto menu (`.menu-btn`) "coperto" di verde su iOS:** su iPhone Safari (non riproducibile su browser desktop), il tasto selezionato di "Spedizione singola/multipla" veniva a volte visualizzato con sfondo verde pieno e testo invisibile, invece del previsto sfondo crema con testo verde scuro in ombra incassata. La causa era un conflitto con la regola generica `button { background: var(--amber); ... }` (usata per i pulsanti primari come "Calcola PV") che in alcuni casi vinceva su iOS nonostante `.menu-btn` avesse una specificità CSS teoricamente maggiore. **Soluzione:** tutte le proprietà di `.menu-btn`, `.menu-btn.active`, `.menu-btn:active` e `.menu-btn.active:active` sono ora dichiarate con `!important`, che ha risolto il problema in modo definitivo. Se in futuro si aggiungono altri elementi tipo "pillola di navigazione" (stile diverso dal pulsante generico ma stesso tag `<button>`), applicare da subito lo stesso pattern `!important` per evitare lo stesso bug.
