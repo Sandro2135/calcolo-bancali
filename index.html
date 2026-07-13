@@ -1384,16 +1384,20 @@
     function minutiGiorno(g) {
       if (!g) return 0;
       let minuti = 0;
-      let completa = false;
+      let specialCount = 0; // quante mezze giornate hanno un codice P/F/M (l'assenza "/" non conta)
       [['e1', 'u1'], ['e2', 'u2']].forEach(([ce, cu]) => {
         const val = g[ce];
         if (CODICI_SPECIALI.includes(val)) {
-          if (val !== '/') completa = true; // P/F/M completano sempre a 6h, l'assenza "/" no
+          if (val !== '/') specialCount++;
         } else {
           minuti += minutiTurno(val, g[cu]);
         }
       });
-      return completa ? Math.max(minuti, 360) : minuti;
+      // giornata intera P/F/M (anche mista, es. mattina M + pomeriggio P): 6h fisse
+      if (specialCount === 2) return 360;
+      // meta' giornata con P/F/M: aggiunge al massimo 3h alle ore reali, senza mai superare le 6h totali
+      if (specialCount === 1) return Math.max(minuti, Math.min(minuti + 180, 360));
+      return minuti;
     }
 
     function formattaMinuti(min) {
