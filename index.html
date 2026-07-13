@@ -592,6 +592,8 @@
     }
 
     .mese-nav button:hover { background: var(--base-hover); }
+    .mese-nav button:disabled { opacity: 0.35; cursor: default; }
+    .mese-nav button:disabled:hover { background: var(--base); }
     .mese-nav button:active { box-shadow: var(--shadow-in-sm); }
 
     .mese-label { font-size: 1rem; font-weight: 700; color: var(--text); text-transform: capitalize; }
@@ -894,7 +896,7 @@
 
     <div class="container">
       <div class="mese-nav">
-        <button onclick="cambiaMese(-1)">‹</button>
+        <button onclick="cambiaMese(-1)" id="mese-prev">‹</button>
         <div class="mese-label" id="mese-label">—</div>
         <button onclick="cambiaMese(1)">›</button>
       </div>
@@ -1416,14 +1418,19 @@
     }
 
     function cambiaMese(delta) {
-      orarioMeseCorrente += delta;
-      if (orarioMeseCorrente < 0) { orarioMeseCorrente = 11; orarioAnnoCorrente--; }
-      if (orarioMeseCorrente > 11) { orarioMeseCorrente = 0; orarioAnnoCorrente++; }
+      let nuovoMese = orarioMeseCorrente + delta;
+      let nuovoAnno = orarioAnnoCorrente;
+      if (nuovoMese < 0) { nuovoMese = 11; nuovoAnno--; }
+      if (nuovoMese > 11) { nuovoMese = 0; nuovoAnno++; }
+      if (nuovoAnno < 2026) return; // non si naviga prima di gennaio 2026
+      orarioMeseCorrente = nuovoMese;
+      orarioAnnoCorrente = nuovoAnno;
       renderMeseOrario();
     }
 
     function renderMeseOrario() {
       document.getElementById('mese-label').textContent = MESI[orarioMeseCorrente] + ' ' + orarioAnnoCorrente;
+      document.getElementById('mese-prev').disabled = (orarioAnnoCorrente <= 2026 && orarioMeseCorrente === 0);
 
       const numGiorni = new Date(orarioAnnoCorrente, orarioMeseCorrente + 1, 0).getDate();
       const oggi = new Date(); oggi.setHours(0, 0, 0, 0);
