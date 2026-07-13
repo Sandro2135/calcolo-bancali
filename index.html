@@ -1532,6 +1532,15 @@
     }
 
     function costruisciRuota(container, valori, valoreIniziale, onCambio) {
+      // Annulla un eventuale aggiornamento ritardato rimasto in sospeso dalla cella aperta in precedenza
+      clearTimeout(container._ruotaTimeout);
+
+      // Interrompe un eventuale scroll "a inerzia" ancora in corso, altrimenti puo' sovrascrivere
+      // lo scrollTop impostato qui sotto una volta che l'inerzia si esaurisce
+      container.style.overflow = 'hidden';
+      container.offsetHeight;
+      container.style.overflow = '';
+
       container.innerHTML = `<div style="height:${RUOTA_PADDING}px"></div>` +
         valori.map(v => `<div class="ruota-item" data-val="${v}">${formattaValoreRuota(v)}</div>`).join('') +
         `<div style="height:${RUOTA_PADDING}px"></div>`;
@@ -1540,10 +1549,9 @@
       container.scrollTop = idx * RUOTA_ITEM_H;
       evidenziaSelezione(container, valoreIniziale);
 
-      let timeout;
       container.onscroll = () => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
+        clearTimeout(container._ruotaTimeout);
+        container._ruotaTimeout = setTimeout(() => {
           const idxSel = Math.max(0, Math.min(valori.length - 1, Math.round(container.scrollTop / RUOTA_ITEM_H)));
           const val = valori[idxSel];
           evidenziaSelezione(container, val);
