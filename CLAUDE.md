@@ -63,6 +63,14 @@ Il vecchio tema "bacheca in sughero" (foto sfondo, puntine, fogli di carta ruota
 
 **Se si vuole cambiare ancora il colore d'accento:** basta modificare i valori esadecimali di `--amber`/`--amber-dark`/`--amber-tint` (primario) e `--copper`/`--copper-dark`/`--copper-tint` (identità Orario) in `:root`, più le rgba dentro `--shadow-amber`/`--shadow-amber-in` (che devono restare coerenti col nuovo colore per l'effetto ombra colorata dei pulsanti). Il file `sfondo2.jpg` del vecchio tema bacheca è ancora nel repo ma non più referenziato da nessun CSS — può essere eliminato in un futuro cleanup, non è urgente.
 
+### Icona home screen iPhone
+- `<link rel="apple-touch-icon" href="icon.png" />` + `<link rel="icon" href="icon.png" />` nell'`<head>` — prima non c'era nessuna icona, iOS mostrava una "C" bianca su sfondo grigio generata automaticamente dal titolo della pagina
+- `icon.png` (512×512, nel repo accanto a `index.html`): un pacco/scatola isometrico a 3 tonalità di verde (`#6fcf97` coperchio, `#22a559` parete sinistra, `#167a3f` parete destra) su sfondo crema (`#f1eee7`, stesso `--base` del tema), con un nastro bianco semi-trasparente diagonale
+- Generata con **PowerShell + `System.Drawing`** (stesso approccio usato in passato per ridimensionare le foto di sfondo del vecchio tema bacheca), nessuno strumento esterno necessario. Script salvato solo nella cronologia della sessione, non nel repo — se va rigenerata bisogna ricostruire lo script (vedi logica sotto)
+- **Geometria del nastro:** costruita nel sistema di coordinate proprie delle facce della scatola (vettori `u`/`v` del coperchio, `w` di profondità) invece che con un semplice offset perpendicolare in pixel — necessario perché un offset 2D "ingenuo" non rispetta la prospettiva isometrica e il nastro risultava storto/non simmetrico. Il nastro è un **unico poligono** (coperchio + discesa sulla parete sinistra uniti, nessuna giunzione visibile), con taglio finale parallelo agli spigoli obliqui della scatola e angoli netti (no arrotondamenti)
+- **Dimensioni attuali della scatola nel canvas 512×512:** `half=195` (semi-larghezza), `halfH = half*75/130`, `depth = half*150/130` (stessi rapporti isometrici del disegno originale), centrata nel canvas col bounding-box verticale reale (non con un offset fisso) — ingrandita due volte su richiesta esplicita perché appariva troppo piccola nella schermata home dell'iPhone
+- **Nota importante:** su iPhone Safari, dopo aver pubblicato una nuova versione dell'icona, bisogna **rimuovere e ricreare il segnalibro** sulla home — Safari mantiene in cache l'icona vecchia per i segnalibri già esistenti, ricaricare la pagina non basta
+
 ### Menu (dentro Rettifiche)
 - Due sezioni: **Spedizione singola** e **Spedizione multipla**
 - Il menu si trova **sotto** il foglio (container), non sopra
