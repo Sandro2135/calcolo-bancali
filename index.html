@@ -1359,6 +1359,10 @@
 
     let orarioMap = getOrarioMap();
 
+    // Rimuove i giorni precedenti al 2026, non piu' necessari
+    Object.keys(orarioMap).forEach(data => { if (data < '2026-01-01') delete orarioMap[data]; });
+    localStorage.setItem(ORARIO_KEY, JSON.stringify(orarioMap));
+
     function salvaOrarioMap() {
       localStorage.setItem(ORARIO_KEY, JSON.stringify(orarioMap));
     }
