@@ -135,6 +135,13 @@ Il vecchio tema "bacheca in sughero" (foto sfondo, puntine, fogli di carta ruota
 - Key localStorage: `orario_giorni` — oggetto (non array) indicizzato per data
 - **Limite gennaio 2026:** non si può navigare col calendario (frecce ‹ ›) a mesi precedenti gennaio 2026 (`cambiaMese` ha un controllo che blocca `nuovoAnno < 2026`); il tasto "‹" si disabilita visivamente (opacity ridotta) quando si è a gennaio 2026 (`id="mese-prev"`, proprietà `.disabled` impostata in `renderMeseOrario()`). Inoltre, al caricamento dell'app, ogni giorno salvato in `orario_giorni` con data precedente al 2026-01-01 viene **eliminato automaticamente** da localStorage (poche righe subito dopo `getOrarioMap()`)
 
+### Backup Orario
+- Due pulsanti in cima alla sezione Orario, sopra la navigazione mese: **⬇ Esporta backup** e **⬆ Importa backup**
+- **Esporta:** scarica un file `.json` (`backup-orario-YYYYMMDD.json`) con l'intero contenuto di `orario_giorni` (nessun dato di Rettifiche incluso, su richiesta esplicita dell'utente — non gli interessa salvare lo storico Rettifiche)
+- **Importa:** apre un file picker, legge il JSON, chiede conferma (`confirm`) e **sovrascrive interamente** `orarioMap`/`orario_giorni` con il contenuto del file
+- Funzioni: `esportaBackupOrario()` e `importaBackupOrario(event)`, vicino a `salvaOrarioMap()` nello script
+- Scopo: sicurezza contro perdita dati (cancellazione accidentale, reset telefono, pulizia dati Safari) — non c'entra con bug di codice, il localStorage non viene toccato dagli aggiornamenti del sito finché la key `orario_giorni` e la struttura dati restano le stesse
+
 ## Struttura dati localStorage
 
 ```js
