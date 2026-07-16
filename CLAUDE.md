@@ -133,7 +133,15 @@ Il vecchio tema "bacheca in sughero" (foto sfondo, puntine, fogli di carta ruota
 - **Colonna Totale**: mostra `Xh Y'` (o solo `Y'` se sotto l'ora), oppure **"/"** per i giorni con assenza intera o weekend senza orari — ma **solo se il giorno è già passato o è oggi** (i weekend futuri restano "—"). Weekend con orari realmente lavorati mostrano le ore effettive, non "/"
 - Righe tabella tutte bianche/crema (nessuna alternanza di colore forte, solo un lieve tint verde sui weekend)
 - Key localStorage: `orario_giorni` — oggetto (non array) indicizzato per data
-- **Limite gennaio 2026:** non si può navigare col calendario (frecce ‹ ›) a mesi precedenti gennaio 2026 (`cambiaMese` ha un controllo che blocca `nuovoAnno < 2026`); il tasto "‹" si disabilita visivamente (opacity ridotta) quando si è a gennaio 2026 (`id="mese-prev"`, proprietà `.disabled` impostata in `renderMeseOrario()`). Inoltre, al caricamento dell'app, ogni giorno salvato in `orario_giorni` con data precedente al 2026-01-01 viene **eliminato automaticamente** da localStorage (poche righe subito dopo `getOrarioMap()`)
+- **Limite luglio 2026:** non si può navigare col calendario (frecce ‹ ›) a mesi precedenti luglio 2026 (`cambiaMese` blocca `nuovoAnno < 2026 || (nuovoAnno === 2026 && nuovoMese < 6)`); il tasto "‹" si disabilita visivamente (opacity ridotta) quando si è a luglio 2026 (`id="mese-prev"`, proprietà `.disabled` impostata in `renderMeseOrario()` con `orarioAnnoCorrente === 2026 && orarioMeseCorrente === 6`). Inoltre, al caricamento dell'app, ogni giorno salvato in `orario_giorni` con data precedente al 2026-07-01 viene **eliminato automaticamente** da localStorage (poche righe subito dopo `getOrarioMap()`). Limite precedente era gennaio 2026, spostato in avanti su richiesta esplicita dell'utente con la stessa logica di pulizia dati già usata la prima volta.
+
+### Esporta PDF (Orario)
+- Pulsante **🖨 Esporta PDF** sotto la riga di backup, sopra la navigazione mese
+- Funzione `esportaOrarioPDF()`: chiama semplicemente `window.print()` — nessuna libreria PDF, coerente con l'approccio "vanilla, no dipendenze esterne" del progetto
+- Su iPhone Safari, `window.print()` apre l'anteprima di stampa nativa; da lì l'utente può salvare come PDF tramite l'icona di condivisione (Safari genera un vero PDF, non serve altro codice)
+- Un blocco `@media print` nasconde tutto tranne la tabella Orario del mese corrente (home, Rettifiche, pulsanti di navigazione/backup, tastiera, modali) e rimuove le ombre neumorfiche (non necessarie/pulite in stampa), sostituendole con bordi sottili grigi
+- `.tabella-wrap` in stampa perde `max-height`/`overflow` (normalmente scrollabile a schermo) così la tabella intera si stampa su più pagine se necessario, con l'intestazione (`thead`) ripetuta automaticamente dal browser su ogni pagina
+- Esporta solo il mese attualmente visualizzato (non l'intero storico): per mesi diversi, prima navigare con ‹ › e poi esportare
 
 ### Backup Orario
 - Due pulsanti in cima alla sezione Orario, sopra la navigazione mese: **⬇ Esporta backup** e **⬆ Importa backup**

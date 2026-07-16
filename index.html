@@ -771,6 +771,41 @@
 
     .codice-btn:active { box-shadow: var(--shadow-in-sm); }
     .codice-btn-assenza { color: var(--text-secondary); }
+
+    /* STAMPA / ESPORTAZIONE PDF (solo tabella Orario) */
+    @media print {
+      .rotate-overlay,
+      .home-screen,
+      #app-rettifiche,
+      .back-btn,
+      .backup-row,
+      .mese-nav button,
+      .tastiera-overlay,
+      .modal-overlay {
+        display: none !important;
+      }
+
+      body { background: white; padding: 0; }
+
+      .app-screen { max-width: 100%; }
+
+      .container { box-shadow: none; padding: 0; }
+
+      .riepilogo-mese { box-shadow: none; border: 1px solid #999; }
+
+      .tabella-wrap { max-height: none; overflow: visible; box-shadow: none; border: 1px solid #999; }
+
+      table.tabella-orario { font-size: 10pt; }
+
+      .tabella-orario thead th {
+        position: static;
+        background: #ddd !important;
+        color: #000 !important;
+        font-size: 8pt;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
   </style>
 </head>
 <body>
@@ -918,6 +953,9 @@
         <button class="backup-btn" onclick="esportaBackupOrario()">⬇ Esporta backup</button>
         <button class="backup-btn" onclick="document.getElementById('import-orario-input').click()">⬆ Importa backup</button>
         <input type="file" id="import-orario-input" accept="application/json" style="display:none" onchange="importaBackupOrario(event)" />
+      </div>
+      <div class="backup-row">
+        <button class="backup-btn" onclick="esportaOrarioPDF()">🖨 Esporta PDF</button>
       </div>
 
       <div class="mese-nav">
@@ -1386,12 +1424,16 @@
 
     let orarioMap = getOrarioMap();
 
-    // Rimuove i giorni precedenti al 2026, non piu' necessari
-    Object.keys(orarioMap).forEach(data => { if (data < '2026-01-01') delete orarioMap[data]; });
+    // Rimuove i giorni precedenti a luglio 2026, non piu' necessari
+    Object.keys(orarioMap).forEach(data => { if (data < '2026-07-01') delete orarioMap[data]; });
     localStorage.setItem(ORARIO_KEY, JSON.stringify(orarioMap));
 
     function salvaOrarioMap() {
       localStorage.setItem(ORARIO_KEY, JSON.stringify(orarioMap));
+    }
+
+    function esportaOrarioPDF() {
+      window.print();
     }
 
     // --- BACKUP ORARIO ---
@@ -1487,7 +1529,7 @@
       let nuovoAnno = orarioAnnoCorrente;
       if (nuovoMese < 0) { nuovoMese = 11; nuovoAnno--; }
       if (nuovoMese > 11) { nuovoMese = 0; nuovoAnno++; }
-      if (nuovoAnno < 2026) return; // non si naviga prima di gennaio 2026
+      if (nuovoAnno < 2026 || (nuovoAnno === 2026 && nuovoMese < 6)) return; // non si naviga prima di luglio 2026
       orarioMeseCorrente = nuovoMese;
       orarioAnnoCorrente = nuovoAnno;
       renderMeseOrario();
@@ -1495,7 +1537,7 @@
 
     function renderMeseOrario() {
       document.getElementById('mese-label').textContent = MESI[orarioMeseCorrente] + ' ' + orarioAnnoCorrente;
-      document.getElementById('mese-prev').disabled = (orarioAnnoCorrente <= 2026 && orarioMeseCorrente === 0);
+      document.getElementById('mese-prev').disabled = (orarioAnnoCorrente === 2026 && orarioMeseCorrente === 6);
 
       const numGiorni = new Date(orarioAnnoCorrente, orarioMeseCorrente + 1, 0).getDate();
       const oggi = new Date(); oggi.setHours(0, 0, 0, 0);
